@@ -1,0 +1,16 @@
+-- Users Table
+CREATE TABLE users (
+    user_id INT AUTO_INCREMENT PRIMARY KEY,
+    auth0_id VARCHAR(255) NOT NULL UNIQUE,
+    first_name VARCHAR(60) NOT NULL,
+    last_name VARCHAR(60) NOT NULL,
+    email VARCHAR(45) NOT NULL UNIQUE,
+    password VARCHAR(45) NOT NULL,
+    is_consultant BOOLEAN NOT NULL,
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    status BOOLEAN NOT NULL,
+    description TEXT,
+    rating DOUBLE,
+    specialties VARCHAR(255)
+);
