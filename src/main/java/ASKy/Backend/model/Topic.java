@@ -1,70 +1,32 @@
 package ASKy.Backend.model;
 
 import jakarta.persistence.*;
+import lombok.*;
+
 import java.util.Objects;
 
-@Entity
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@EqualsAndHashCode(of = "topicId")
+@Entity(name = "topics")
 @Table(name = "topics")
 public class Topic {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer topicsId;
+    @Column(name = "topic_id")
+    private Integer topicId;
 
-    @Column(nullable = false, length = 45)
+    @Column(name = "name", nullable = false, length = 45)
     private String name;
 
     @Lob
-    @Column(nullable = false)
+    @Column(name = "description", nullable = false)
     private String description;
 
     @ManyToOne
-    @JoinColumn(name = "subjects_subjectsId", nullable = false)
+    @JoinColumn(name = "subject_id", nullable = false)
     private Subject subject;
-
-    // Getters and Setters
-    public Integer getTopicsId() {
-        return topicsId;
-    }
-
-    public void setTopicsId(Integer topicsId) {
-        this.topicsId = topicsId;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public Subject getSubject() {
-        return subject;
-    }
-
-    public void setSubject(Subject subject) {
-        this.subject = subject;
-    }
-
-    // equals and hashCode
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Topic topic = (Topic) o;
-        return Objects.equals(topicsId, topic.topicsId);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(topicsId);
-    }
 }

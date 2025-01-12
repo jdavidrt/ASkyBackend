@@ -1,113 +1,52 @@
 package ASKy.Backend.model;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
+import lombok.*;
+
 import java.time.LocalDateTime;
 import java.util.Objects;
 
-@Entity
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@EqualsAndHashCode(of = "transactionId")
+@Entity(name = "transactions")
 @Table(name = "transactions")
 public class Transaction {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer transactionsId;
+    @Column(name = "transaction_id")
+    private Integer transactionId;
 
-    @Column(nullable = false, length = 45)
+    @Column(name = "type", nullable = false, length = 45)
     private String type;
 
-    @Column(nullable = false)
+    @Column(name = "amount", nullable = false)
     private String amount;
 
-    @Column(nullable = false)
+    @Column(name = "created_at", nullable = false, updatable = false)
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime createdAt;
 
     @Lob
+    @Column(name = "description")
     private String description;
 
-    @Column(nullable = false)
+    @Column(name = "askoins_amount", nullable = false)
     private Float askoinsAmount;
 
     @ManyToOne
-    @JoinColumn(name = "questionId")
+    @JoinColumn(name = "question_id")
     private Question question;
 
+    @Column(name = "askoin_rate")
     private Integer askoinRate;
 
-    // Getters and Setters
-    public Integer getTransactionsId() {
-        return transactionsId;
-    }
-
-    public void setTransactionsId(Integer transactionsId) {
-        this.transactionsId = transactionsId;
-    }
-
-    public String getType() {
-        return type;
-    }
-
-    public void setType(String type) {
-        this.type = type;
-    }
-
-    public String getAmount() {
-        return amount;
-    }
-
-    public void setAmount(String amount) {
-        this.amount = amount;
-    }
-
-    public LocalDateTime getCreatedAt() {
-        return createdAt;
-    }
-
-    public void setCreatedAt(LocalDateTime createdAt) {
-        this.createdAt = createdAt;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public Float getAskoinsAmount() {
-        return askoinsAmount;
-    }
-
-    public void setAskoinsAmount(Float askoinsAmount) {
-        this.askoinsAmount = askoinsAmount;
-    }
-
-    public Question getQuestion() {
-        return question;
-    }
-
-    public void setQuestion(Question question) {
-        this.question = question;
-    }
-
-    public Integer getAskoinRate() {
-        return askoinRate;
-    }
-
-    public void setAskoinRate(Integer askoinRate) {
-        this.askoinRate = askoinRate;
-    }
-
-    // equals and hashCode
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Transaction transaction = (Transaction) o;
-        return Objects.equals(transactionsId, transaction.transactionsId);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(transactionsId);
+    @PrePersist
+    protected void onCreate() {
+        createdAt = LocalDateTime.now();
     }
 }

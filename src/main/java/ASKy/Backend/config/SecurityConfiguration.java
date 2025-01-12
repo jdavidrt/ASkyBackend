@@ -43,9 +43,9 @@ public class SecurityConfiguration {
         http
                 .csrf((csrf) -> csrf.disable())
                 .cors(withDefaults()) //por defecto spring va a buscar un bean con el nombre "corsConfigurationSource".
-                .authorizeHttpRequests(authorizeRequests ->
-                        authorizeRequests
-                                .requestMatchers("/api/public").permitAll()
+                .authorizeHttpRequests(authorize ->
+                        authorize
+                                .requestMatchers("/swagger-ui.html","/swagger-ui/**","/v3/api-docs/**","/actuator/health", "/api/public").permitAll()
                                 .requestMatchers("/api/admin/**").hasAuthority("administrador")
                                 .requestMatchers("/api/client/**").hasAuthority("cliente")
                                 .anyRequest().authenticated()
