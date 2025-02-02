@@ -34,24 +34,10 @@ public class ExpertController {
                     @ApiResponse(responseCode = "400", description = "Parámetros de búsqueda inválidos.",
                             content = @Content(schema = @Schema(ref = "#/components/schemas/Error")))
             })
-    @GetMapping
-    public ResponseEntity<ActionResponse<List<ExpertResponse>>> getExperts(
-            @RequestParam(required = false) String specialty,
-            @RequestParam(required = false) String name,
-            @RequestParam(required = false, defaultValue = "rating") String orderBy) {
-
-        ExpertFilterRequest filter = new ExpertFilterRequest();
-        filter.setSpecialty(specialty);
-        filter.setName(name);
-        filter.setOrderBy(orderBy);
-
-        List<ExpertResponse> experts = expertService.getExperts(filter);
-
-        ActionResponse<List<ExpertResponse>> response = new ActionResponse<>(
-                true, experts, ResponseMessage.EXPERTS_RETRIEVED_SUCCESS.getMessage()
-        );
-
-        return ResponseEntity.ok(response);
+    @GetMapping("/search")
+    public ResponseEntity<List<ExpertResponse>> searchExperts(@ModelAttribute ExpertFilterRequest filters) {
+        List<ExpertResponse> experts = expertService.searchExperts(filters);
+        return ResponseEntity.ok(experts);
     }
 }
 

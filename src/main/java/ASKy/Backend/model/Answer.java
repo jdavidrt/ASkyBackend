@@ -45,4 +45,9 @@ public class Answer {
 
     @Column(name = "rated_at")
     private LocalDateTime ratedAt;
+
+    @PrePersist
+    protected void onCreate() {
+        createdAt = LocalDateTime.now();
+    }
 }

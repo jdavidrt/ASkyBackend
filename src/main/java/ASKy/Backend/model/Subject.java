@@ -25,4 +25,9 @@ public class Subject {
     @Lob
     @Column(name = "description", nullable = false)
     private String description;
+
+    // 🔹 Cada `Subject` pertenece solo a un `Topic`
+    @ManyToOne
+    @JoinColumn(name = "topic_id", nullable = false)
+    private Topic topic;
 }

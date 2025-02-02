@@ -2,12 +2,16 @@ package ASKy.Backend.service;
 
 import ASKy.Backend.dto.request.ExpertFilterRequest;
 import ASKy.Backend.dto.response.ExpertResponse;
-import ASKy.Backend.model.User;
+import ASKy.Backend.model.Expert;
 import ASKy.Backend.repository.ExpertRepository;
+import ASKy.Backend.specification.ExpertSpecification;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class ExpertService {
@@ -20,15 +24,12 @@ public class ExpertService {
         this.modelMapper = modelMapper;
     }
 
-    public List<ExpertResponse> getExperts(ExpertFilterRequest filter) {
-        List<User> experts = expertRepository.findExperts(
-                filter.getSpecialty(),
-                filter.getName(),
-                filter.getOrderBy()
-        );
+    public List<ExpertResponse> searchExperts(ExpertFilterRequest filters) {
+        Specification<Expert> specification = ExpertSpecification.byFilters(filters);
+        List<Expert> experts = expertRepository.findAll(specification, Sort.by(Sort.Direction.DESC, "averageRating"));
 
         return experts.stream()
                 .map(expert -> modelMapper.map(expert, ExpertResponse.class))
-                .toList();
+                .collect(Collectors.toList());
     }
 }

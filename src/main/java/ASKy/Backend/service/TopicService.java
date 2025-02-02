@@ -26,18 +26,13 @@ public class TopicService {
     }
 
     public TopicResponse createTopic(CreateTopicRequest request) {
-        Subject subject = subjectRepository.findById(request.getSubjectId())
-                .orElseThrow(() -> new EntityNotFoundException("Subject no encontrado"));
-
         Topic topic = modelMapper.map(request, Topic.class);
-        topic.setSubject(subject);
-
         Topic savedTopic = topicRepository.save(topic);
         return modelMapper.map(savedTopic, TopicResponse.class);
     }
 
     public List<TopicResponse> getTopicsBySubject(Integer subjectId) {
-        List<Topic> topics = topicRepository.findBySubjectSubjectId(subjectId);
+        List<Topic> topics = topicRepository.findBySubtopicsSubjectId(subjectId);
         return topics.stream()
                 .map(topic -> modelMapper.map(topic, TopicResponse.class))
                 .toList();

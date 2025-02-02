@@ -44,7 +44,6 @@ public class QuestionService {
         question.setUser(user);
         question.setTopic(topic);
         question.setCreatedAt(java.time.LocalDateTime.now());
-        question.setStatus(true);
 
         Question savedQuestion = questionRepository.save(question);
         return modelMapper.map(savedQuestion, QuestionResponse.class);

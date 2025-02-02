@@ -38,8 +38,9 @@ public class SubjectController {
             })
     @PostMapping
     public ResponseEntity<ActionResponse<SubjectResponse>> createSubject(
+            @PathVariable Integer topicId,
             @Valid @RequestBody CreateSubjectRequest request) {
-        SubjectResponse subjectResponse = subjectService.createSubject(request);
+        SubjectResponse subjectResponse = subjectService.createSubject(topicId, request);
         ActionResponse<SubjectResponse> response = new ActionResponse<SubjectResponse>(
                 true, subjectResponse, ResponseMessage.SUBJECT_CREATED_SUCCESS.getMessage());
         return ResponseEntity.status(HttpStatus.CREATED).body(response);

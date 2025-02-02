@@ -3,6 +3,7 @@ package ASKy.Backend.model;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.List;
 import java.util.Objects;
 
 @Getter
@@ -26,7 +27,10 @@ public class Topic {
     @Column(name = "description", nullable = false)
     private String description;
 
-    @ManyToOne
-    @JoinColumn(name = "subject_id", nullable = false)
-    private Subject subject;
+    // 🔹 Relación con la tabla intermedia ExpertsTopics
+    @OneToMany(mappedBy = "topic", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<ExpertsTopics> expertTopics;
+
+    @OneToMany(mappedBy = "topic", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<Subject> subtopics;
 }

@@ -12,6 +12,7 @@ import java.util.Objects;
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(of = "userId")
+@Inheritance(strategy = InheritanceType.JOINED)
 @Entity(name = "users")
 @Table(name = "users")
 public class User {
@@ -39,26 +40,20 @@ public class User {
     @Column(name = "is_consultant", nullable = false)
     private Boolean isConsultant;
 
-    @Column(name = "created_at", nullable = false, updatable = false)
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
-    private LocalDateTime createdAt;
-
     @Column(name = "status", nullable = false)
     private Boolean status;
+
+    @Column(name = "amount_askoins")
+    private Float amountAskoins;
 
     @Column(name = "updated_at")
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime updatedAt;
 
-    @Lob
-    @Column(name = "description")
-    private String description;
 
-    @Column(name = "rating")
-    private Double rating;
-
-    @Column(name = "specialties")
-    private String specialties;
+    @Column(name = "created_at", nullable = false, updatable = false)
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
+    private LocalDateTime createdAt;
 
     @PrePersist
     protected void onCreate() {

@@ -4,7 +4,8 @@ import lombok.Data;
 
 @Data
 public class ExpertFilterRequest {
-    private String specialty; // Filtrar por especialidad
-    private String name; // Buscar por nombre
-    private String orderBy; // Relevancia, precio, calificación
+    private String name;
+    private String topic;
+    private String subtopic;
+    private String orderBy;
 }
