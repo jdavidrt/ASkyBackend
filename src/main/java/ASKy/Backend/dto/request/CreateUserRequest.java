@@ -28,7 +28,10 @@ public class CreateUserRequest {
     @NotNull
     private Boolean isConsultant;
 
-    @Size(max = 255)
-    private String description; // Opcional
+    private String biography;
+
+    private Float basePrice;
+
+    private Boolean availability;
 
 }

@@ -67,6 +67,15 @@ public class UserService {
         return modelMapper.map(updatedUser, UserResponse.class);
     }
 
+    public UserResponse updateUserByAuth0Id(String auth0Id, UpdateUserRequest request) {
+        User user = userRepository.findByAuth0Id(auth0Id)
+                .orElseThrow(() -> new EntityNotFoundException("Usuario no encontrado"));
+
+        modelMapper.map(request, user);
+        User updatedUser = userRepository.save(user);
+        return modelMapper.map(updatedUser, UserResponse.class);
+    }
+
     public void deleteUser(Integer id) {
         if (!userRepository.existsById(id)) {
             throw new EntityNotFoundException("Usuario no encontrado");
