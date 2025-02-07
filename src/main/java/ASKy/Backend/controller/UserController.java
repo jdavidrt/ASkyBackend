@@ -14,6 +14,8 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -37,7 +39,7 @@ public class UserController {
                     @ApiResponse(responseCode = "400", description = "Solicitud inválida.",
                             content = @Content(schema = @Schema(ref = "#/components/schemas/Error")))
             })
-    @PostMapping
+    @PostMapping("/register")
     public ResponseEntity<ActionResponse<UserResponse>> createUser(@Valid @RequestBody CreateUserRequest request) {
         UserResponse userResponse = userService.createUser(request);
         ActionResponse<UserResponse> response = new ActionResponse<>(true, userResponse, ResponseMessage.USER_CREATED_SUCCESS.getMessage());
@@ -82,10 +84,14 @@ public class UserController {
                     @ApiResponse(responseCode = "404", description = "Usuario no encontrado.",
                             content = @Content(schema = @Schema(ref = "#/components/schemas/Error")))
             })
-    @PutMapping("/{id}")
-    public ResponseEntity<ActionResponse<UserResponse>> updateUser(@PathVariable Integer id,
-                                                                   @Valid @RequestBody UpdateUserRequest request) {
-        UserResponse userResponse = userService.updateUser(id, request);
+    @PutMapping("/profile")
+    public ResponseEntity<ActionResponse<UserResponse>> updateProfile(
+            Authentication authentication,
+            @Valid @RequestBody UpdateUserRequest request) {
+
+        String auth0Id = ((Jwt) authentication.getPrincipal()).getSubject();
+
+        UserResponse userResponse = userService.updateUserByAuth0Id(auth0Id, request);
         ActionResponse<UserResponse> response = new ActionResponse<>(true, userResponse, ResponseMessage.USER_UPDATED_SUCCESS.getMessage());
         return ResponseEntity.ok(response);
     }
