@@ -45,19 +45,20 @@ public class SecurityConfiguration {
                 .cors(withDefaults()) //por defecto spring va a buscar un bean con el nombre "corsConfigurationSource".
                 .authorizeHttpRequests(authorize ->
                         authorize
-                                .requestMatchers("/swagger-ui.html","/swagger-ui/**","/v3/api-docs/**","/actuator/health", "/api/public","/api/users/register").permitAll()
-                                .requestMatchers("/api/admin/**").hasAuthority("administrador")
-                                .requestMatchers("/api/client/**").hasAuthority("cliente")
-                                .anyRequest().authenticated()
-                )
-                .oauth2ResourceServer(oauth2ResourceServer ->
-                        oauth2ResourceServer
-                                .jwt(jwt ->
-                                        jwt
-                                                .decoder(jwtDecoder())
-                                                .jwtAuthenticationConverter(jwtAuthenticationConverter())
-                                )
+                                .anyRequest().permitAll()
+//                                .requestMatchers("/swagger-ui.html","/swagger-ui/**","/v3/api-docs/**","/actuator/health", "/api/public","/api/users/register","/api").permitAll()
+//                                .requestMatchers("/api/admin/**").hasAuthority("administrador")
+//                                .requestMatchers("/api/client/**").hasAuthority("cliente")
+//                                .anyRequest().authenticated()
                 );
+//                .oauth2ResourceServer(oauth2ResourceServer ->
+//                        oauth2ResourceServer
+//                                .jwt(jwt ->
+//                                        jwt
+//                                                .decoder(jwtDecoder())
+//                                                .jwtAuthenticationConverter(jwtAuthenticationConverter())
+//                                )
+//                );
         return http.build();
     }
 

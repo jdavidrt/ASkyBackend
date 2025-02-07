@@ -34,4 +34,6 @@ public class CreateUserRequest {
 
     private Boolean availability;
 
+
+
 }
