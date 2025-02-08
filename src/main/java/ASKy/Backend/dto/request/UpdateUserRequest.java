@@ -20,4 +20,10 @@ public class UpdateUserRequest {
     private Boolean isConsultant;
     private Boolean status; // Ejemplo para habilitar/deshabilitar usuarios
 
+    private String biography;
+
+    private Float basePrice;
+
+    private Boolean availability;
+
 }
