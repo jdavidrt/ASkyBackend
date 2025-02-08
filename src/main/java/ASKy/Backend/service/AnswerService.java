@@ -76,5 +76,30 @@ public class AnswerService {
                 .map(answer -> modelMapper.map(answer, AnswerResponse.class))
                 .toList();
     }
+    
+    public AnswerResponse rateAnswer(Integer answerId, RateAnswerRequest request) {
+    Answer answer = answerRepository.findById(answerId)
+            .orElseThrow(() -> new EntityNotFoundException("Respuesta no encontrada"));
+
+    answer.setRating(request.getRating());
+    answer.setComment(request.getComment());
+    answer.setRatedAt(LocalDateTime.now());
+
+    Answer updatedAnswer = answerRepository.save(answer);
+    return modelMapper.map(updatedAnswer, AnswerResponse.class);
+}
+
+    private AnswerResponse mapToAnswerResponse(Answer answer) {
+        AnswerResponse response = new AnswerResponse();
+        response.setId(answer.getAnswerId());
+        response.setBody(answer.getBody());
+        response.setQuestionId(answer.getQuestion().getQuestionId());
+        response.setUserId(answer.getUser().getUserId());
+        response.setCreatedAt(answer.getCreatedAt());
+        response.setRating(answer.getRating());
+        response.setComment(answer.getComment());
+        response.setRatedAt(answer.getRatedAt());
+        return response;
+    }
 }
 
