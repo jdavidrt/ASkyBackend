@@ -47,6 +47,7 @@ public class UserService {
         user.setLastName(request.getLastName());
         user.setEmail(request.getEmail());
         user.setIsConsultant(request.getIsConsultant());
+        user.setPassword(request.getPassword());
         user.setStatus(true);
         User savedUser = userRepository.save(user);
 
