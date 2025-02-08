@@ -11,5 +11,8 @@ public class UserResponse {
     private String email;
     private Boolean isConsultant;
     private String description;
+    private Float basePrice;
+    private Boolean availability;
+    private Float responseRate;
 
 }
