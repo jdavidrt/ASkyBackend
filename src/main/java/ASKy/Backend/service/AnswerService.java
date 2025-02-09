@@ -11,6 +11,7 @@ import ASKy.Backend.repository.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
+import ASKy.Backend.dto.request.RateAnswerRequest;
 
 import java.time.LocalDateTime;
 import java.util.List;
