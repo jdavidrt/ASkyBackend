@@ -18,7 +18,7 @@ public enum ResponseMessage {
     SUBJECT_DELETED_SUCCESS("Subject eliminado exitosamente"),
     SUBJECTS_RETRIEVED_SUCCESS("Subjects obtenidos exitosamente"),
     VALIDATION_ERROR("Error de validación"),
-    EXPERTS_RETRIEVED_SUCCESS("Expertos obtenidos exitosamente");
+    EXPERTS_RETRIEVED_SUCCESS("Expertos obtenidos exitosamente"),
     ANSWER_CREATED_SUCCESS("Respuesta creada con éxito."),
     ANSWERS_RETRIEVED_SUCCESS("Respuestas recuperadas con éxito."),
     ANSWER_DELETED_SUCCESS("Respuesta eliminada con éxito."),
