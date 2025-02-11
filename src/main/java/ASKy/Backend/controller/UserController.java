@@ -84,12 +84,12 @@ public class UserController {
                     @ApiResponse(responseCode = "404", description = "Usuario no encontrado.",
                             content = @Content(schema = @Schema(ref = "#/components/schemas/Error")))
             })
-    @PutMapping("/profile")
+    @PutMapping("/profile/{auth0Id}")
     public ResponseEntity<ActionResponse<UserResponse>> updateProfile(
-            Authentication authentication,
-            @Valid @RequestBody UpdateUserRequest request) {
+        //     Authentication authentication,
+            @Valid @RequestBody UpdateUserRequest request,@PathVariable String auth0Id) {
 
-        String auth0Id = ((Jwt) authentication.getPrincipal()).getSubject();
+        // String auth0Id = ((Jwt) authentication.getPrincipal()).getSubject();
 
         UserResponse userResponse = userService.updateUserByAuth0Id(auth0Id, request);
         ActionResponse<UserResponse> response = new ActionResponse<>(true, userResponse, ResponseMessage.USER_UPDATED_SUCCESS.getMessage());
