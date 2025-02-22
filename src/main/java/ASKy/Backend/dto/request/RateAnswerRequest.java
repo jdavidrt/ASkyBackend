@@ -13,4 +13,7 @@ public class RateAnswerRequest {
     @NotBlank
     private String comment;
 
+    @NotNull
+    private Integer answerId; // 🔹 Track which answer is being rated
+
 }

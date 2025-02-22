@@ -26,6 +26,10 @@ public class Rating {
     @JoinColumn(name = "expert_id", nullable = false) // Experto calificado
     private Expert expert;
 
+    @OneToOne
+    @JoinColumn(name = "answer_id", nullable = false) // 🔹 Relate rating to the answer
+    private Answer answer;
+
     @Column(name = "rating", nullable = false)
     private Integer rating; // Valor de 1 a 5 estrellas
 
@@ -36,9 +40,11 @@ public class Rating {
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;
 
-    @OneToOne
-    @JoinColumn(name = "answer_detail_id") // Relación con la respuesta calificada
-    private AnswerDetail answerDetail;
+//    @OneToOne
+//    @JoinColumn(name = "answer_detail_id") // Relación con la respuesta calificada
+//    private AnswerDetail answerDetail;
+
+
 
     @PrePersist
     protected void onCreate() {
