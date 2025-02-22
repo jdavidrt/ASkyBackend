@@ -49,6 +49,23 @@ public class ExpertSpecification {
                 }
             }
 
+            // 🔹 Exclude sanctioned experts
+            predicates.add(criteriaBuilder.isFalse(root.get("sanctioned")));
+
+            // 🔹 Dynamic Sorting (Default: highest rating + highest response count)
+            if (filters.getOrderBy() != null) {
+                if (filters.getOrderBy().equalsIgnoreCase("rating")) {
+                    query.orderBy(criteriaBuilder.desc(root.get("averageRating")));
+                } else if (filters.getOrderBy().equalsIgnoreCase("price")) {
+                    query.orderBy(criteriaBuilder.asc(root.get("basePrice")));
+                }
+            } else {
+                query.orderBy(
+                        criteriaBuilder.desc(root.get("averageRating")),
+                        criteriaBuilder.desc(root.get("totalResponses"))
+                );
+            }
+
             return criteriaBuilder.and(predicates.toArray(new Predicate[0]));
         };
     }
