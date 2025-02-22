@@ -6,6 +6,6 @@ CREATE TABLE experts (
     availability BOOLEAN NOT NULL DEFAULT TRUE,
     response_rate FLOAT NOT NULL DEFAULT 0.0,
     total_responses INT DEFAULT 0,
-
+    sanctioned BOOLEAN NOT NULL DEFAULT FALSE, --  New Field Added
     FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE
 );
