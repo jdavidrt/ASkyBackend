@@ -1,7 +1,9 @@
 package ASKy.Backend.dto.request;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.*;
 import lombok.Data;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
 
@@ -25,6 +27,7 @@ public class CreateQuestionRequest {
     @Future(message = "La fecha límite debe estar en el futuro")
     private LocalDateTime deadline;
 
-    private String image; // Opcional
+    @Schema(type = "string", format = "binary") // Swagger support for file uploads
+    private MultipartFile imageUrl;
 
 }

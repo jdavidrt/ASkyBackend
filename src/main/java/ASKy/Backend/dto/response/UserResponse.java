@@ -14,5 +14,6 @@ public class UserResponse {
     private Float basePrice;
     private Boolean availability;
     private Float responseRate;
+    private String profileImageUrl;
 
 }

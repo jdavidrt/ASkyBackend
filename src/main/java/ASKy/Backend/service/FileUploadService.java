@@ -18,8 +18,13 @@ public class FileUploadService {
     }
 
     public String uploadFile(MultipartFile file) throws IOException {
+        if (file == null || file.isEmpty()) {
+            throw new IllegalArgumentException("No se ha proporcionado ninguna imagen.");
+        }
+
         Map uploadResult = cloudinary.uploader().upload(file.getBytes(),
                 ObjectUtils.asMap("folder", "asky/questions"));
+
         return uploadResult.get("url").toString();
     }
 }

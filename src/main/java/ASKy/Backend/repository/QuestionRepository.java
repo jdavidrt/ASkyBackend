@@ -10,6 +10,7 @@ import java.util.List;
 public interface QuestionRepository extends JpaRepository<Question, Integer> {
     // Cambiar "findByUserId" a "findByUserUserId" para que coincida con la relación
     List<Question> findByUserUserId(Integer userId);
+    List<Question> findAllByUserUserId(Integer userId);
 
     // Buscar preguntas por título o cuerpo
     List<Question> findByTitleContainingOrBodyContaining(String titleKeyword, String bodyKeyword);

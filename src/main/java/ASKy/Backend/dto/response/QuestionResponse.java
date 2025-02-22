@@ -12,6 +12,5 @@ public class QuestionResponse {
     private Integer price;
     private Integer topicId;
     private LocalDateTime deadline;
-    private String image;
-
+    private String imageUrl;
 }

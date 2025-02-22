@@ -7,7 +7,7 @@ CREATE TABLE questions (
     status TINYINT(1) NOT NULL DEFAULT 0, -- 0 = pending, 1 = accepted, 2 = rejected, 3 = canceled
     topic_id INT NOT NULL,
     user_id INT NOT NULL,
-    attachment VARCHAR(255) DEFAULT NULL,
+    imageUrl VARCHAR(255) DEFAULT NULL,
     deadline TIMESTAMP NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,

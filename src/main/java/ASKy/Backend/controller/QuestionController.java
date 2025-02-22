@@ -9,12 +9,16 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
@@ -28,15 +32,24 @@ public class QuestionController {
         this.questionService = questionService;
     }
 
-    @Operation(summary = "Crear Pregunta",
+    @Operation(
+            summary = "Crear Pregunta",
             description = "Crea una nueva pregunta asociada a un usuario específico.",
+            requestBody = @RequestBody(
+                    description = "Datos de la pregunta, incluyendo imagen opcional",
+                    required = true,
+                    content = @Content(mediaType = "multipart/form-data",
+                            schema = @Schema(implementation = CreateQuestionRequest.class))
+            ),
             responses = {
-                    @ApiResponse(responseCode = "201", description = "Pregunta creada con éxito.",
-                            content = @Content(mediaType = "application/json", schema = @Schema(implementation = QuestionResponse.class))),
-                    @ApiResponse(responseCode = "400", description = "Solicitud inválida.",
-                            content = @Content(schema = @Schema(ref = "#/components/schemas/Error")))
-            })
-    @PostMapping
+                    @ApiResponse(responseCode = "201", description = "Pregunta creada con éxito",
+                            content = @Content(mediaType = "application/json",
+                                    schema = @Schema(implementation = QuestionResponse.class))),
+                    @ApiResponse(responseCode = "400", description = "Solicitud inválida",
+                            content = @Content(mediaType = "application/json"))
+            }
+    )
+    @PostMapping(consumes = "multipart/form-data")
     public ResponseEntity<ActionResponse<QuestionResponse>> createQuestion(
             @Valid @RequestBody CreateQuestionRequest request,
             @RequestParam Integer userId) {

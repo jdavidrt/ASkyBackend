@@ -2,6 +2,7 @@ package ASKy.Backend.dto.request;
 
 import jakarta.validation.constraints.*;
 import lombok.Data;
+import org.springframework.web.multipart.MultipartFile;
 
 @Data
 public class CreateUserRequest {
@@ -33,7 +34,7 @@ public class CreateUserRequest {
     private Float basePrice;
 
     private Boolean availability;
-
+    private MultipartFile profileImage;
 
 
 }

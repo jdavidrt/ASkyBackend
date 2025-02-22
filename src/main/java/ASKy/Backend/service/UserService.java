@@ -10,6 +10,7 @@ import jakarta.persistence.EntityNotFoundException;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.util.List;
 
 @Service
@@ -17,10 +18,12 @@ public class UserService {
 
 
     private final UserRepository userRepository;
+    private final FileUploadService fileUploadService;
     private final ModelMapper modelMapper;
 
-    public UserService(UserRepository userRepository, ModelMapper modelMapper) {
+    public UserService(UserRepository userRepository, FileUploadService fileUploadService, ModelMapper modelMapper) {
         this.userRepository = userRepository;
+        this.fileUploadService = fileUploadService;
         this.modelMapper = modelMapper;
     }
 
@@ -28,6 +31,7 @@ public class UserService {
         if (userRepository.existsByAuth0Id(request.getAuth0Id())) {
             throw new IllegalArgumentException("El usuario ya está registrado");
         }
+
         User user;
         if (Boolean.TRUE.equals(request.getIsConsultant())) {
             Expert expert = new Expert();
@@ -49,9 +53,18 @@ public class UserService {
         user.setIsConsultant(request.getIsConsultant());
         user.setPassword(request.getPassword());
         user.setStatus(true);
+
+        // Subir imagen si está presente
+        if (request.getProfileImage() != null && !request.getProfileImage().isEmpty()) {
+            try {
+                String imageUrl = fileUploadService.uploadFile(request.getProfileImage());
+                user.setProfileImageUrl(imageUrl);
+            } catch (IOException e) {
+                throw new RuntimeException("Error al subir la imagen de perfil", e);
+            }
+        }
+
         User savedUser = userRepository.save(user);
-
-
         return modelMapper.map(savedUser, UserResponse.class);
     }
 

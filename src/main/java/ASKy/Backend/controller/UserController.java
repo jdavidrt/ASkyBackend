@@ -10,6 +10,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
@@ -18,6 +19,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -31,15 +33,24 @@ public class UserController {
         this.userService = userService;
     }
 
-    @Operation(summary = "Crear Usuario",
+    @Operation(
+            summary = "Crear Usuario",
             description = "Crea un nuevo usuario y lo guarda en la base de datos.",
+            requestBody = @RequestBody(
+                    description = "Datos del usuario incluyendo imagen de perfil opcional",
+                    required = true,
+                    content = @Content(mediaType = "multipart/form-data",
+                            schema = @Schema(implementation = CreateUserRequest.class))
+            ),
             responses = {
-                    @ApiResponse(responseCode = "201", description = "Usuario creado con éxito.",
-                            content = @Content(mediaType = "application/json", schema = @Schema(implementation = UserResponse.class))),
-                    @ApiResponse(responseCode = "400", description = "Solicitud inválida.",
-                            content = @Content(schema = @Schema(ref = "#/components/schemas/Error")))
-            })
-    @PostMapping("/register")
+                    @ApiResponse(responseCode = "201", description = "Usuario creado con éxito",
+                            content = @Content(mediaType = "application/json",
+                                    schema = @Schema(implementation = UserResponse.class))),
+                    @ApiResponse(responseCode = "400", description = "Solicitud inválida",
+                            content = @Content(mediaType = "application/json"))
+            }
+    )
+    @PostMapping(value = "/register", consumes = "multipart/form-data")
     public ResponseEntity<ActionResponse<UserResponse>> createUser(@Valid @RequestBody CreateUserRequest request) {
         UserResponse userResponse = userService.createUser(request);
         ActionResponse<UserResponse> response = new ActionResponse<>(true, userResponse, ResponseMessage.USER_CREATED_SUCCESS.getMessage());

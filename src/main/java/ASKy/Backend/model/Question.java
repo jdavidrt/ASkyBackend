@@ -1,5 +1,6 @@
 package ASKy.Backend.model;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -40,14 +41,15 @@ public class Question {
     @JoinColumn(name = "topic_id", nullable = false)
     private Topic topic;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
-    @Column(name = "attachment")
-    private String attachment;
+    @Column(name = "image_url")
+    private String imageUrl;
 
     @Column(name = "deadline", nullable = false)
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss'Z'", timezone = "UTC")
     private LocalDateTime deadline;
 
     @Column(name = "created_at", nullable = false, updatable = false)
@@ -58,7 +60,9 @@ public class Question {
 
     @PrePersist
     protected void onCreate() {
-        createdAt = LocalDateTime.now();
+        LocalDateTime now = LocalDateTime.now();
+        createdAt = now;
+        updatedAt = now;  // 🔹 Se asegura de que no sea NULL en la inserción
     }
 
     @PreUpdate
