@@ -14,4 +14,5 @@ public class AnswerResponse {
     private Integer rating;
     private String comment;
     private LocalDateTime ratedAt;
+    private Boolean isRight;
 }

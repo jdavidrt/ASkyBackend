@@ -66,7 +66,9 @@ public class User {
 
     @PrePersist
     protected void onCreate() {
-        createdAt = LocalDateTime.now();
+        LocalDateTime now = LocalDateTime.now();
+        createdAt = now;
+        updatedAt = now;  // 🔹 Se asegura de que no sea NULL en la inserción
     }
 
     @PreUpdate

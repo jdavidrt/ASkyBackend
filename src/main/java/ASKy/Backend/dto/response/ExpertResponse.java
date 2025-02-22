@@ -12,4 +12,5 @@ public class ExpertResponse {
     private Float basePrice;
     private Boolean availability;
     private Float responseRate;
+    private Boolean sanctioned;
 }

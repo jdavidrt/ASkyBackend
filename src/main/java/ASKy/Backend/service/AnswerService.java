@@ -2,9 +2,7 @@ package ASKy.Backend.service;
 
 import ASKy.Backend.dto.request.CreateAnswerRequest;
 import ASKy.Backend.dto.response.AnswerResponse;
-import ASKy.Backend.model.Answer;
-import ASKy.Backend.model.Question;
-import ASKy.Backend.model.User;
+import ASKy.Backend.model.*;
 import ASKy.Backend.repository.AnswerRepository;
 import ASKy.Backend.repository.QuestionRepository;
 import ASKy.Backend.repository.UserRepository;
@@ -36,17 +34,29 @@ public class AnswerService {
         Question question = questionRepository.findById(request.getQuestionId())
                 .orElseThrow(() -> new EntityNotFoundException("Pregunta no encontrada"));
 
-        User user = userRepository.findById(userId)
+        Expert expert = (Expert) userRepository.findById(request.getExpertId())
                 .filter(User::getIsConsultant)
                 .orElseThrow(() -> new EntityNotFoundException("Usuario no es un experto"));
 
+        User user = userRepository.findById(request.getUserId())
+                .orElseThrow(() -> new EntityNotFoundException("Usuario no encontrado"));
+
         Answer answer = new Answer();
         answer.setQuestion(question);
-        answer.setUser(user);
+        answer.setUser(expert);
         answer.setBody(request.getBody());
         answer.setCreatedAt(LocalDateTime.now());
 
         Answer savedAnswer = answerRepository.save(answer);
+
+        // 🔹 Create AnswerDetail entry
+        AnswerDetail answerDetail = new AnswerDetail();
+        answerDetail.setAnswer(savedAnswer);
+        answerDetail.setQuestion(question);
+        answerDetail.setExpert(expert);
+        answerDetail.setUser(user);
+        answerDetail.setIsRight(null); // Not evaluated yet
+
         return modelMapper.map(savedAnswer, AnswerResponse.class);
     }
 

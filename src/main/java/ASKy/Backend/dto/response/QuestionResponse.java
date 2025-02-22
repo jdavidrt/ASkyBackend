@@ -13,4 +13,6 @@ public class QuestionResponse {
     private Integer topicId;
     private LocalDateTime deadline;
     private String imageUrl;
+    private String active;  // 🔹 "open" or "closed"
+    private String status; // 🔹 "pending", "accepted", "rejected", "canceled"
 }

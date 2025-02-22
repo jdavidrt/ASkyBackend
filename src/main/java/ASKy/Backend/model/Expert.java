@@ -33,6 +33,9 @@ public class Expert extends User{
     @Column(name = "total_responses", nullable = false)
     private Integer totalResponses = 0;
 
+    @Column(name = "sanctioned", nullable = false)
+    private Boolean sanctioned = false;
+
     // 🔹 Relación con la tabla intermedia ExpertsTopics
     @OneToMany(mappedBy = "expert", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<ExpertsTopics> expertTopics;
