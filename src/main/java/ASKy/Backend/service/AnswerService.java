@@ -3,6 +3,7 @@ package ASKy.Backend.service;
 import ASKy.Backend.dto.request.CreateAnswerRequest;
 import ASKy.Backend.dto.response.AnswerResponse;
 import ASKy.Backend.model.*;
+import ASKy.Backend.repository.AnswerDetailRepository;
 import ASKy.Backend.repository.AnswerRepository;
 import ASKy.Backend.repository.QuestionRepository;
 import ASKy.Backend.repository.UserRepository;
@@ -20,13 +21,15 @@ public class AnswerService {
     private final AnswerRepository answerRepository;
     private final QuestionRepository questionRepository;
     private final UserRepository userRepository;
+    private final AnswerDetailRepository answerDetailRepository;
     private final ModelMapper modelMapper;
 
     public AnswerService(AnswerRepository answerRepository, QuestionRepository questionRepository,
-                         UserRepository userRepository, ModelMapper modelMapper) {
+                         UserRepository userRepository,  AnswerDetailRepository answerDetailRepository, ModelMapper modelMapper) {
         this.answerRepository = answerRepository;
         this.questionRepository = questionRepository;
         this.userRepository = userRepository;
+        this.answerDetailRepository = answerDetailRepository;
         this.modelMapper = modelMapper;
     }
 
@@ -54,8 +57,10 @@ public class AnswerService {
         answerDetail.setAnswer(savedAnswer);
         answerDetail.setQuestion(question);
         answerDetail.setExpert(expert);
-        answerDetail.setUser(user);
+        answerDetail.setUser(question.getUser());
         answerDetail.setIsRight(null); // Not evaluated yet
+
+        answerDetailRepository.save(answerDetail);
 
         return modelMapper.map(savedAnswer, AnswerResponse.class);
     }
@@ -97,6 +102,14 @@ public class AnswerService {
     answer.setRatedAt(LocalDateTime.now());
 
     Answer updatedAnswer = answerRepository.save(answer);
+
+        // 🔹 Update AnswerDetail with correctness (threshold: 3 stars or higher)
+        AnswerDetail answerDetail = answerDetailRepository.findById(answerId)
+                .orElseThrow(() -> new EntityNotFoundException("Registro de respuesta no encontrado"));
+
+        answerDetail.setIsRight(request.getRating() >= 3);
+        answerDetailRepository.save(answerDetail);
+
     return modelMapper.map(updatedAnswer, AnswerResponse.class);
 }
 
