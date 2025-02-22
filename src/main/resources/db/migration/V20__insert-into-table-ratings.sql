@@ -1,4 +1,4 @@
-INSERT INTO ratings (user_id, expert_id, rating, comment, answer_detail_id)
+INSERT INTO ratings (user_id, expert_id, rating, comment, answer_id)
 VALUES
 (3, 1, 5, 'Great explanation on limits!', 1),  -- Matemáticas (ID correcto)
 (5, 2, 4, 'Good physics explanation.', 2),    -- Física (ID correcto)
