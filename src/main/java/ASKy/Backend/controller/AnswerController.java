@@ -158,14 +158,14 @@ public class AnswerController {
                     @ApiResponse(responseCode = "200", description = "Respuestas encontradas con éxito.",
                             content = @Content(mediaType = "application/json", schema = @Schema(implementation = AnswerResponse.class)))
             })
-    @GetMapping("/search")
-    public ResponseEntity<List<AnswerResponse>> searchAnswers(
+    @GetMapping("/search-detail")
+    public ResponseEntity<List<AnswerResponse>> searchAnswerDetails(
             @RequestParam(required = false) String expertName,
             @RequestParam(required = false) String userName,
             @RequestParam(required = false) Boolean isRight,
             @RequestParam(required = false) Integer minRating
     ) {
-        List<AnswerResponse> responses = answerService.searchAnswers(expertName, userName, isRight, minRating);
+        List<AnswerResponse> responses = answerService.searchAnswerDetails(expertName, userName, isRight, minRating);
         return ResponseEntity.ok(responses);
     }
 

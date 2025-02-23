@@ -157,7 +157,7 @@ public class AnswerService {
                 .collect(Collectors.toList());
     }
 
-    public List<AnswerResponse> searchAnswers(String expertName, String userName, Boolean isRight, Integer minRating) {
+    public List<AnswerResponse> searchAnswerDetails(String expertName, String userName, Boolean isRight, Integer minRating) {
         Specification<AnswerDetail> spec = AnswerDetailSpecification.byFilters(expertName, userName, isRight, minRating);
         List<AnswerDetail> answerDetails = IAnswerDetailRepository.findAll(spec);
 

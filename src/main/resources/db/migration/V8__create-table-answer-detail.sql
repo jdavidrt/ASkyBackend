@@ -5,6 +5,7 @@ CREATE TABLE answer_detail (
     expert_id INT NOT NULL,
     user_id INT NOT NULL,
     is_right BOOLEAN NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 
     FOREIGN KEY (answer_id) REFERENCES answers(answer_id) ON DELETE CASCADE,
     FOREIGN KEY (question_id) REFERENCES questions(question_id) ON DELETE CASCADE,
