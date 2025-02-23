@@ -24,21 +24,25 @@ public class Transaction {
     @Column(name = "type", nullable = false, length = 45)
     private String type;
 
-    @Column(name = "amount", nullable = false)
-    private Float amount;
+//    @Column(name = "amount", nullable = false)
+//    private Float amount;
 
     @Column(name = "askoin_amount")
-    private Float askoinAmount;
+    private Float askoinAmount; // Amount in ASKoins
 
     @Column(name = "money_amount")
-    private Float moneyAmount;
+    private Float moneyAmount; // Money amount in COP
 
     @Column(name = "method", length = 45)
-    private String method;
+    private String method;  // "PayPal"
 
     @Lob
     @Column(name = "description")
     private String description;
+
+    @Column(name = "status", nullable = false, length = 20)
+    private String status; // "Pending" or "Completed"
+
 
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)

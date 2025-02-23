@@ -15,19 +15,17 @@ import java.util.Locale;
 public class PaypalService {
 
     private final APIContext apiContext;
+    private static final float EXCHANGE_RATE = 1.0f; // 1 ASKoin = 1000 COP
+    private static final float PLATFORM_FEE = 0.10f; // 10% fee
 
-    public Payment createPayment(
-            Double total,
-            String currency,
-            String method,
-            String intent,
-            String description,
-            String cancelUrl,
-            String successUrl
-    ) throws PayPalRESTException {
+    public Payment createPayment(Float totalAmount, String currency, String method, String description, String cancelUrl, String successUrl)
+            throws PayPalRESTException {
+        float netAmount = totalAmount * (1 - PLATFORM_FEE); // Deduct 10% fee
+        float askoinAmount = netAmount / EXCHANGE_RATE; // Convert to ASKoins
+
         Amount amount = new Amount();
         amount.setCurrency(currency);
-        amount.setTotal(String.format(Locale.forLanguageTag(currency), "%.2f", total)); // 9.99$ - 9,99€
+        amount.setTotal(String.format(Locale.forLanguageTag(currency), "%.2f", totalAmount));
 
         Transaction transaction = new Transaction();
         transaction.setDescription(description);
@@ -40,23 +38,19 @@ public class PaypalService {
         payer.setPaymentMethod(method);
 
         Payment payment = new Payment();
-        payment.setIntent(intent);
+        payment.setIntent("sale");
         payment.setPayer(payer);
         payment.setTransactions(transactions);
 
         RedirectUrls redirectUrls = new RedirectUrls();
         redirectUrls.setCancelUrl(cancelUrl);
         redirectUrls.setReturnUrl(successUrl);
-
         payment.setRedirectUrls(redirectUrls);
 
         return payment.create(apiContext);
     }
 
-    public Payment executePayment(
-            String paymentId,
-            String payerId
-    ) throws PayPalRESTException {
+    public Payment executePayment(String paymentId, String payerId) throws PayPalRESTException {
         Payment payment = new Payment();
         payment.setId(paymentId);
 
