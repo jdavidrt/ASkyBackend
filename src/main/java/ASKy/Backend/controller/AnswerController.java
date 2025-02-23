@@ -3,6 +3,7 @@ package ASKy.Backend.controller;
 import ASKy.Backend.dto.request.CreateAnswerRequest;
 import ASKy.Backend.dto.request.RateAnswerRequest;
 import ASKy.Backend.dto.response.ActionResponse;
+import ASKy.Backend.dto.response.AnswerDetailResponse;
 import ASKy.Backend.dto.response.AnswerResponse;
 import ASKy.Backend.enums.ResponseMessage;
 import ASKy.Backend.service.AnswerService;
@@ -110,6 +111,19 @@ public class AnswerController {
 
         AnswerResponse answerResponse = answerService.rateAnswer(answerId, request);
         ActionResponse<AnswerResponse> response = new ActionResponse<>(true, answerResponse, ResponseMessage.ANSWER_RATED_SUCCESS.getMessage());
+        return ResponseEntity.ok(response);
+    }
+
+    @Operation(summary = "Obtener Detalles de Respuestas por Pregunta",
+            description = "Recupera detalles de respuestas asociadas a una pregunta específica.",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "Detalles encontrados con éxito.",
+                            content = @Content(mediaType = "application/json", schema = @Schema(implementation = AnswerDetailResponse.class)))
+            })
+    @GetMapping("/details/question/{questionId}")
+    public ResponseEntity<ActionResponse<List<AnswerDetailResponse>>> getAnswerDetailsByQuestion(@PathVariable Integer questionId) {
+        List<AnswerDetailResponse> details = answerService.getAnswerDetailsByQuestion(questionId);
+        ActionResponse<List<AnswerDetailResponse>> response = new ActionResponse<>(true, details, "Detalles de respuestas obtenidos con éxito.");
         return ResponseEntity.ok(response);
     }
 }

@@ -7,6 +7,6 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface RatingRepository extends JpaRepository<Rating, Integer> {
+public interface IRatingRepository extends JpaRepository<Rating, Integer> {
     List<Rating> findByExpert(Expert expert);
 }

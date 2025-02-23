@@ -5,7 +5,7 @@ import ASKy.Backend.dto.request.UpdateUserRequest;
 import ASKy.Backend.dto.response.UserResponse;
 import ASKy.Backend.model.Expert;
 import ASKy.Backend.model.User;
-import ASKy.Backend.repository.UserRepository;
+import ASKy.Backend.repository.IUserRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
@@ -17,18 +17,18 @@ import java.util.List;
 public class UserService {
 
 
-    private final UserRepository userRepository;
+    private final IUserRepository IUserRepository;
     private final FileUploadService fileUploadService;
     private final ModelMapper modelMapper;
 
-    public UserService(UserRepository userRepository, FileUploadService fileUploadService, ModelMapper modelMapper) {
-        this.userRepository = userRepository;
+    public UserService(IUserRepository IUserRepository, FileUploadService fileUploadService, ModelMapper modelMapper) {
+        this.IUserRepository = IUserRepository;
         this.fileUploadService = fileUploadService;
         this.modelMapper = modelMapper;
     }
 
     public UserResponse createUser(CreateUserRequest request) {
-        if (userRepository.existsByAuth0Id(request.getAuth0Id())) {
+        if (IUserRepository.existsByAuth0Id(request.getAuth0Id())) {
             throw new IllegalArgumentException("El usuario ya está registrado");
         }
 
@@ -64,18 +64,18 @@ public class UserService {
             }
         }
 
-        User savedUser = userRepository.save(user);
+        User savedUser = IUserRepository.save(user);
         return modelMapper.map(savedUser, UserResponse.class);
     }
 
     public UserResponse getUserById(Integer id) {
-        User user = userRepository.findById(id)
+        User user = IUserRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Usuario no encontrado"));
         return modelMapper.map(user, UserResponse.class);
     }
 
     public UserResponse getUserByAuth0Id(String auth0Id) {
-        User user = userRepository.findByAuth0Id(auth0Id)
+        User user = IUserRepository.findByAuth0Id(auth0Id)
                 .orElseThrow(() -> new EntityNotFoundException("Usuario no encontrado"));
         return modelMapper.map(user, UserResponse.class);
     }
@@ -83,11 +83,11 @@ public class UserService {
     public List<UserResponse> getUsers(Boolean isConsultant, String email) {
         List<User> users;
         if (isConsultant != null) {
-            users = userRepository.findByIsConsultant(isConsultant);
+            users = IUserRepository.findByIsConsultant(isConsultant);
         } else if (email != null) {
-            users = userRepository.findByEmail(email).stream().toList();
+            users = IUserRepository.findByEmail(email).stream().toList();
         } else {
-            users = userRepository.findAll();
+            users = IUserRepository.findAll();
         }
         return users.stream()
                 .map(user -> modelMapper.map(user, UserResponse.class))
@@ -95,27 +95,27 @@ public class UserService {
     }
 
     public UserResponse updateUser(Integer id, UpdateUserRequest request) {
-        User user = userRepository.findById(id)
+        User user = IUserRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Usuario no encontrado"));
 
         modelMapper.map(request, user);
-        User updatedUser = userRepository.save(user);
+        User updatedUser = IUserRepository.save(user);
         return modelMapper.map(updatedUser, UserResponse.class);
     }
 
     public UserResponse updateUserByAuth0Id(String auth0Id, UpdateUserRequest request) {
-        User user = userRepository.findByAuth0Id(auth0Id)
+        User user = IUserRepository.findByAuth0Id(auth0Id)
                 .orElseThrow(() -> new EntityNotFoundException("Usuario no encontrado"));
 
         modelMapper.map(request, user);
-        User updatedUser = userRepository.save(user);
+        User updatedUser = IUserRepository.save(user);
         return modelMapper.map(updatedUser, UserResponse.class);
     }
 
     public void deleteUser(Integer id) {
-        if (!userRepository.existsById(id)) {
+        if (!IUserRepository.existsById(id)) {
             throw new EntityNotFoundException("Usuario no encontrado");
         }
-        userRepository.deleteById(id);
+        IUserRepository.deleteById(id);
     }
 }

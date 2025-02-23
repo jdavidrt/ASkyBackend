@@ -1,6 +1,7 @@
 package ASKy.Backend.controller;
 
 import ASKy.Backend.dto.request.CreateQuestionRequest;
+import ASKy.Backend.dto.request.RejectQuestionRequest;
 import ASKy.Backend.dto.response.ActionResponse;
 import ASKy.Backend.dto.response.QuestionResponse;
 import ASKy.Backend.enums.ResponseMessage;
@@ -154,5 +155,14 @@ public class QuestionController {
                 true, null, ResponseMessage.QUESTION_DELETED_SUCCESS.getMessage());
         return ResponseEntity.noContent().build();
     }
+
+
+    @Operation(summary = "Rechazar Pregunta", description = "Permite a los moderadores rechazar una pregunta con una justificación.")
+    @PostMapping("/reject")
+    public ResponseEntity<ActionResponse<Void>> rejectQuestion(@RequestBody RejectQuestionRequest request) {
+        questionService.rejectQuestion(request);
+        return ResponseEntity.ok(new ActionResponse<>(true, null, "Pregunta rechazada exitosamente."));
+    }
+
 }
 

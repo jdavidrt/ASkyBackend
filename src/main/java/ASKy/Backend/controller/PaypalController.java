@@ -1,6 +1,8 @@
 package ASKy.Backend.controller;
 
 
+import ASKy.Backend.dto.request.DataPaymentRequest;
+import ASKy.Backend.dto.response.URLPaypalResponse;
 import ASKy.Backend.service.PaypalService;
 import com.paypal.api.payments.Links;
 import com.paypal.api.payments.Payment;
@@ -10,43 +12,71 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.view.RedirectView;
 
 @RestController
-@RequestMapping("/payment")
-@Tag(name = "Payment", description = "Controlador para la integración con PayPal")
+@AllArgsConstructor
+@CrossOrigin(origins = "http://localhost:4200")
+@Slf4j
+@RequestMapping("payments")
 public class PaypalController {
 
     private final PaypalService paypalService;
+    private final String SUCCESS_URL = "http://localhost:8090/payments/success";
+    private final String CANCEL_URL = "http://localhost:8090/payments/cancel";
 
-    public PaypalController(PaypalService paypalService) {
-        this.paypalService = paypalService;
+    @Operation(summary = "Crear pago con PayPal",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "URL de PayPal generada exitosamente."),
+                    @ApiResponse(responseCode = "400", description = "Error al procesar el pago.")
+            })
+    @PostMapping
+    public URLPaypalResponse createPayment(@RequestBody DataPaymentRequest dataPayment) {
+        log.info("Datos del pago: {}", dataPayment);
+        try {
+            Payment payment = paypalService.createPayment(
+                    Double.valueOf(dataPayment.getAmount()),
+                    dataPayment.getCurrency(),
+                    dataPayment.getMethod(),
+                    "sale",
+                    dataPayment.getDescription(),
+                    CANCEL_URL,
+                    SUCCESS_URL
+            );
+            for (Links links : payment.getLinks()) {
+                if (links.getRel().equals("approval_url")) {
+                    return new URLPaypalResponse(links.getHref());
+                }
+            }
+        } catch (PayPalRESTException e) {
+            e.printStackTrace();
+        }
+        return new URLPaypalResponse("http://localhost:3000");
     }
 
-    @Operation(summary = "Crear Pago con PayPal",
-            description = "Inicia el proceso de creación de un pago en PayPal y retorna la URL de aprobación.",
-            responses = {
-                    @ApiResponse(responseCode = "200", description = "Pago creado con éxito. URL de aprobación retornada.",
-                            content = @Content(mediaType = "text/plain", schema = @Schema(implementation = String.class))),
-                    @ApiResponse(responseCode = "400", description = "Solicitud inválida o error al crear el pago.",
-                            content = @Content(mediaType = "text/plain", schema = @Schema(implementation = String.class)))
-            })
-    @PostMapping("/create")
-    public String createPayment(@RequestParam Float amount, @RequestParam String description) {
+    @Operation(summary = "Pago exitoso")
+    @GetMapping("/success")
+    public RedirectView paymentSuccess(
+            @RequestParam("paymentId") String paymentId,
+            @RequestParam("PayerID") String payerId
+    ) {
         try {
-            String cancelUrl = "http://localhost:8080/payment/cancel";
-            String successUrl = "http://localhost:8080/payment/success";
-            Payment payment = paypalService.createPayment(amount, description, cancelUrl, successUrl);
-            return payment.getLinks().stream()
-                    .filter(link -> link.getRel().equals("approval_url"))
-                    .findFirst()
-                    .map(Links::getHref)
-                    .orElse("No approval URL found");
+            Payment payment = paypalService.executePayment(paymentId, payerId);
+            if (payment.getState().equals("approved")) {
+                return new RedirectView("http://localhost:3000/payment/success");
+            }
         } catch (PayPalRESTException e) {
-            return "Error: " + e.getMessage();
+            e.printStackTrace();
         }
+        return new RedirectView("http://localhost:3000");
+    }
+
+    @Operation(summary = "Pago cancelado")
+    @GetMapping("/cancel")
+    public RedirectView paymentCancel() {
+        return new RedirectView("http://localhost:3000");
     }
 }

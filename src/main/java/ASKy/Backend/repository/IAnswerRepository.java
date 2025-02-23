@@ -7,7 +7,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface AnswerRepository extends JpaRepository<Answer, Integer> {
+public interface IAnswerRepository extends JpaRepository<Answer, Integer> {
     List<Answer> findByQuestionQuestionId(Integer questionId);
     List<Answer> findByBodyContaining(String keyword);
 }

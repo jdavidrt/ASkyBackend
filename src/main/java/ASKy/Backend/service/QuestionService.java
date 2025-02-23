@@ -7,10 +7,10 @@ import ASKy.Backend.model.Notification;
 import ASKy.Backend.model.Question;
 import ASKy.Backend.model.Topic;
 import ASKy.Backend.model.User;
-import ASKy.Backend.repository.NotificationRepository;
-import ASKy.Backend.repository.QuestionRepository;
-import ASKy.Backend.repository.TopicRepository;
-import ASKy.Backend.repository.UserRepository;
+import ASKy.Backend.repository.INotificationRepository;
+import ASKy.Backend.repository.IQuestionRepository;
+import ASKy.Backend.repository.ITopicRepository;
+import ASKy.Backend.repository.IUserRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
@@ -24,33 +24,33 @@ import java.util.stream.Collectors;
 @Service
 public class QuestionService {
 
-    private final QuestionRepository questionRepository;
-    private final UserRepository userRepository;
+    private final IQuestionRepository IQuestionRepository;
+    private final IUserRepository IUserRepository;
     private final FileUploadService fileUploadService;
-    private final TopicRepository topicRepository;
+    private final ITopicRepository ITopicRepository;
     private final ModelMapper modelMapper;
-    private final NotificationRepository notificationRepository;
+    private final INotificationRepository INotificationRepository;
 
-    public QuestionService(QuestionRepository questionRepository,
-                           UserRepository userRepository,
-                            FileUploadService fileUploadService,
-                           TopicRepository topicRepository,
+    public QuestionService(IQuestionRepository IQuestionRepository,
+                           IUserRepository IUserRepository,
+                           FileUploadService fileUploadService,
+                           ITopicRepository ITopicRepository,
                            ModelMapper modelMapper,
-                           NotificationRepository notificationRepository) {
-        this.questionRepository = questionRepository;
-        this.userRepository = userRepository;
+                           INotificationRepository INotificationRepository) {
+        this.IQuestionRepository = IQuestionRepository;
+        this.IUserRepository = IUserRepository;
         this.fileUploadService = fileUploadService;
-        this.topicRepository = topicRepository;
+        this.ITopicRepository = ITopicRepository;
         this.modelMapper = modelMapper;
-        this.notificationRepository = notificationRepository;
+        this.INotificationRepository = INotificationRepository;
     }
 
     // Create a new question
     public QuestionResponse createQuestion(CreateQuestionRequest request, Integer userId) {
-        User user = userRepository.findById(userId)
+        User user = IUserRepository.findById(userId)
                 .orElseThrow(() -> new EntityNotFoundException("Usuario no encontrado"));
 
-        Topic topic = topicRepository.findById(request.getTopicId())
+        Topic topic = ITopicRepository.findById(request.getTopicId())
                 .orElseThrow(() -> new EntityNotFoundException("Tema no encontrado"));
 
         // **🔹 Convertir deadline de UTC a Zona Horaria de Colombia**
@@ -86,26 +86,26 @@ public class QuestionService {
             }
         }
 
-        Question savedQuestion = questionRepository.save(question);
+        Question savedQuestion = IQuestionRepository.save(question);
         return modelMapper.map(savedQuestion, QuestionResponse.class);
     }
 
     // Retrieve a question by ID
     public QuestionResponse getQuestionById(Integer questionId) {
-        Question question = questionRepository.findById(questionId)
+        Question question = IQuestionRepository.findById(questionId)
                 .orElseThrow(() -> new EntityNotFoundException("Pregunta no encontrada"));
         return modelMapper.map(question, QuestionResponse.class);
     }
 
     public List<QuestionResponse> searchQuestions(String keyword) {
-        List<Question> questions = questionRepository.findByTitleContainingOrBodyContaining(keyword, keyword);
+        List<Question> questions = IQuestionRepository.findByTitleContainingOrBodyContaining(keyword, keyword);
         return questions.stream()
                 .map(question -> modelMapper.map(question, QuestionResponse.class))
                 .toList();
     }
 
     public List<QuestionResponse> getQuestionsByUser(Integer userId) {
-        List<Question> questions = questionRepository.findAllByUserUserId(userId);
+        List<Question> questions = IQuestionRepository.findAllByUserUserId(userId);
 
         return questions.stream()
                 .map(this::mapToQuestionResponse) // 🔹 Use the custom mapping method
@@ -114,7 +114,7 @@ public class QuestionService {
 
     // Retrieve all questions
     public List<QuestionResponse> getAllQuestions() {
-        List<Question> questions = questionRepository.findAll();
+        List<Question> questions = IQuestionRepository.findAll();
 
         return questions.stream()
                 .map(this::mapToQuestionResponse)
@@ -147,32 +147,32 @@ public class QuestionService {
 
     // Assign a question to an expert
     public QuestionResponse assignQuestionToExpert(Integer questionId, Integer expertId) {
-        Question question = questionRepository.findById(questionId)
+        Question question = IQuestionRepository.findById(questionId)
                 .orElseThrow(() -> new EntityNotFoundException("Pregunta no encontrada"));
 
-        User expert = userRepository.findById(expertId)
+        User expert = IUserRepository.findById(expertId)
                 .filter(User::getIsConsultant)
                 .orElseThrow(() -> new EntityNotFoundException("Experto no encontrado o no válido"));
 
         question.setUser(expert);
-        Question updatedQuestion = questionRepository.save(question);
+        Question updatedQuestion = IQuestionRepository.save(question);
         return modelMapper.map(updatedQuestion, QuestionResponse.class);
     }
 
     // Delete a question
     public void deleteQuestion(Integer questionId) {
-        if (!questionRepository.existsById(questionId)) {
+        if (!IQuestionRepository.existsById(questionId)) {
             throw new EntityNotFoundException("Pregunta no encontrada");
         }
-        questionRepository.deleteById(questionId);
+        IQuestionRepository.deleteById(questionId);
     }
 
     public void rejectQuestion(RejectQuestionRequest request) {
-        Question question = questionRepository.findById(request.getQuestionId())
+        Question question = IQuestionRepository.findById(request.getQuestionId())
                 .orElseThrow(() -> new EntityNotFoundException("Pregunta no encontrada"));
 
         question.setStatus((byte) 2); // 🔹 2 = Rejected
-        questionRepository.save(question);
+        IQuestionRepository.save(question);
 
         // 🔹 Notify the user
         Notification notification = new Notification();
@@ -182,6 +182,6 @@ public class QuestionService {
         notification.setReadStatus((byte) 0);
         notification.setCreatedAt(LocalDateTime.now());
 
-        notificationRepository.save(notification);
+        INotificationRepository.save(notification);
     }
 }

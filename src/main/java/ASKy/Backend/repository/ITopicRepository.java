@@ -7,7 +7,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface TopicRepository extends JpaRepository<Topic, Integer> {
+public interface ITopicRepository extends JpaRepository<Topic, Integer> {
     List<Topic> findBySubtopicsSubjectId(Integer subjectId);
     List<Topic> findByNameContainingOrDescriptionContaining(String nameKeyword, String descriptionKeyword);
 }

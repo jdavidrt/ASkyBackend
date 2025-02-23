@@ -13,29 +13,29 @@ import java.util.List;
 @Service
 public class RatingService {
 
-    private final RatingRepository ratingRepository;
-    private final AnswerRepository answerRepository;
-    private final UserRepository userRepository;
-    private final ExpertRepository expertRepository;
+    private final IRatingRepository IRatingRepository;
+    private final IAnswerRepository IAnswerRepository;
+    private final IUserRepository IUserRepository;
+    private final IExpertRepository IExpertRepository;
     private final ModelMapper modelMapper;
 
-    public RatingService(RatingRepository ratingRepository, AnswerRepository answerRepository,
-                         UserRepository userRepository, ExpertRepository expertRepository, ModelMapper modelMapper) {
-        this.ratingRepository = ratingRepository;
-        this.answerRepository = answerRepository;
-        this.userRepository = userRepository;
-        this.expertRepository = expertRepository;
+    public RatingService(IRatingRepository IRatingRepository, IAnswerRepository IAnswerRepository,
+                         IUserRepository IUserRepository, IExpertRepository IExpertRepository, ModelMapper modelMapper) {
+        this.IRatingRepository = IRatingRepository;
+        this.IAnswerRepository = IAnswerRepository;
+        this.IUserRepository = IUserRepository;
+        this.IExpertRepository = IExpertRepository;
         this.modelMapper = modelMapper;
     }
 
     public RatingResponse rateAnswer(Integer userId, RateAnswerRequest request) {
-        Answer answer = answerRepository.findById(request.getAnswerId())
+        Answer answer = IAnswerRepository.findById(request.getAnswerId())
                 .orElseThrow(() -> new EntityNotFoundException("Respuesta no encontrada"));
 
-        Expert expert = (Expert) userRepository.findById(answer.getUser().getUserId())
+        Expert expert = (Expert) IUserRepository.findById(answer.getUser().getUserId())
                 .orElseThrow(() -> new EntityNotFoundException("Experto no encontrado"));
 
-        User user = userRepository.findById(userId)
+        User user = IUserRepository.findById(userId)
                 .orElseThrow(() -> new EntityNotFoundException("Usuario no encontrado"));
 
         Rating rating = new Rating();
@@ -46,7 +46,7 @@ public class RatingService {
         rating.setComment(request.getComment());
         rating.setCreatedAt(LocalDateTime.now());
 
-        ratingRepository.save(rating);
+        IRatingRepository.save(rating);
 
         // 🔹 Update expert rating
         updateExpertRating(expert);
@@ -55,7 +55,7 @@ public class RatingService {
     }
 
     private void updateExpertRating(Expert expert) {
-        List<Rating> ratings = ratingRepository.findByExpert(expert);
+        List<Rating> ratings = IRatingRepository.findByExpert(expert);
 
         // 🔹 Weighted Rating Calculation (Newer ratings weigh more)
         double totalWeight = 0;
@@ -78,7 +78,7 @@ public class RatingService {
             expert.setSanctioned(true);
         }
 
-        expertRepository.save(expert);
+        IExpertRepository.save(expert);
     }
 }
 
