@@ -1,11 +1,11 @@
 CREATE TABLE transactions (
     transaction_id INT AUTO_INCREMENT PRIMARY KEY,
     type VARCHAR(45) NOT NULL,
-    amount FLOAT NOT NULL,
     askoin_amount FLOAT DEFAULT NULL,
     money_amount FLOAT DEFAULT NULL,
     method VARCHAR(45) DEFAULT NULL,
     description TEXT DEFAULT NULL,
+    status VARCHAR(20) NOT NULL DEFAULT 'Pending', -- New status field
     user_id INT NOT NULL,
     question_id INT DEFAULT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,

@@ -1,7 +1,10 @@
-INSERT INTO transactions (type, amount, askoin_amount, money_amount, method, description, user_id, question_id)
+INSERT INTO transactions (type, askoin_amount, money_amount, method, description, status, user_id, question_id)
 VALUES
-('ASKoin Purchase', 50.0, 50, NULL, 'PayPal', 'User bought ASKoins', 3, NULL),
-('Question Payment', 10.0, NULL, 10, 'ASKoin', 'Paid for question #1', 3, 1),
-('Expert Payout', 8.0, NULL, 8, 'Bank Transfer', 'Expert received payment for question #1', 1, 1),
-('ASKoin Purchase', 100.0, 100, NULL, 'Stripe', 'User bought ASKoins', 5, NULL);
+-- Recharge transactions (users buying ASKoins)
+('Recharge', 50, 50000, 'PayPal', 'User recharged 50 ASKoins via PayPal', 'Completed', 3, 3),
+('Recharge', 100, 100000, 'Stripe', 'User recharged 100 ASKoins via Stripe', 'Completed', 5, 2),
+
+-- Withdrawal transactions (users cashing out ASKoins)
+('Withdrawal', 20, 20000, 'Bank Transfer', 'User withdrew 20 ASKoins via bank transfer', 'Pending', 4, 1),
+('Withdrawal', 30, 30000, 'PayPal', 'User withdrew 30 ASKoins via PayPal', 'Completed', 2, 3);
 
