@@ -107,10 +107,31 @@ public class UserService {
         User user = IUserRepository.findByAuth0Id(auth0Id)
                 .orElseThrow(() -> new EntityNotFoundException("Usuario no encontrado"));
 
-        modelMapper.map(request, user);
+        // Map only the fields that are present in the request
+        if (request.getFirstName() != null) user.setFirstName(request.getFirstName());
+        if (request.getLastName() != null) user.setLastName(request.getLastName());
+        if (request.getEmail() != null) user.setEmail(request.getEmail());
+        if (request.getDescription() != null) user.setProfileImageUrl(request.getDescription());
+        if (request.getIsConsultant() != null) user.setIsConsultant(request.getIsConsultant());
+        if (request.getStatus() != null) user.setStatus(request.getStatus());
+//        if (request.getBiography() != null) user.setBiography(request.getBiography());
+//        if (request.getBasePrice() != null) user.setBasePrice(request.getBasePrice());
+//        if (request.getAvailability() != null) user.setAvailability(request.getAvailability());
+
+        // 🔹 Handle profile image update
+        if (request.getProfileImage() != null && !request.getProfileImage().isEmpty()) {
+            try {
+                String imageUrl = fileUploadService.uploadFile(request.getProfileImage());
+                user.setProfileImageUrl(imageUrl);
+            } catch (IOException e) {
+                throw new RuntimeException("Error al subir la imagen de perfil", e);
+            }
+        }
+
         User updatedUser = IUserRepository.save(user);
         return modelMapper.map(updatedUser, UserResponse.class);
     }
+
 
     public void deleteUser(Integer id) {
         if (!IUserRepository.existsById(id)) {

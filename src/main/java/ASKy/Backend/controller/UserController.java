@@ -87,15 +87,24 @@ public class UserController {
         return ResponseEntity.ok(response);
     }
 
-    @Operation(summary = "Actualizar Usuario",
-            description = "Actualiza los datos de un usuario específico identificado por su ID.",
+    @Operation(
+            summary = "Actualizar Usuario",
+            description = "Actualiza los datos de un usuario específico identificado por su Auth0 ID. Permite actualizar la imagen de perfil opcionalmente.",
+            requestBody = @RequestBody(
+                    description = "Datos del usuario a actualizar, incluyendo imagen de perfil opcional.",
+                    required = true,
+                    content = @Content(mediaType = "multipart/form-data",
+                            schema = @Schema(implementation = UpdateUserRequest.class))
+            ),
             responses = {
                     @ApiResponse(responseCode = "200", description = "Usuario actualizado con éxito.",
-                            content = @Content(mediaType = "application/json", schema = @Schema(implementation = UserResponse.class))),
+                            content = @Content(mediaType = "application/json",
+                                    schema = @Schema(implementation = UserResponse.class))),
                     @ApiResponse(responseCode = "404", description = "Usuario no encontrado.",
                             content = @Content(schema = @Schema(ref = "#/components/schemas/Error")))
-            })
-    @PutMapping("/profile/{auth0Id}")
+            }
+    )
+    @PutMapping(value = "/profile/{auth0Id}", consumes = "multipart/form-data")
     public ResponseEntity<ActionResponse<UserResponse>> updateProfile(
         //     Authentication authentication,
             @Valid @RequestBody UpdateUserRequest request,@PathVariable String auth0Id) {

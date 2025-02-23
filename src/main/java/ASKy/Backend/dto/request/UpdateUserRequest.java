@@ -1,7 +1,9 @@
 package ASKy.Backend.dto.request;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.*;
 import lombok.Data;
+import org.springframework.web.multipart.MultipartFile;
 
 @Data
 public class UpdateUserRequest {
@@ -25,5 +27,8 @@ public class UpdateUserRequest {
     private Float basePrice;
 
     private Boolean availability;
+
+    @Schema(type = "string", format = "binary") // Permite manejar imágenes en Swagger UI
+    private MultipartFile profileImage; // Nueva imagen de perfil (opcional)
 
 }
