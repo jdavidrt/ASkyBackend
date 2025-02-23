@@ -8,13 +8,16 @@ import ASKy.Backend.repository.IAnswerDetailRepository;
 import ASKy.Backend.repository.IAnswerRepository;
 import ASKy.Backend.repository.IQuestionRepository;
 import ASKy.Backend.repository.IUserRepository;
+import ASKy.Backend.specification.AnswerDetailSpecification;
 import jakarta.persistence.EntityNotFoundException;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import ASKy.Backend.dto.request.RateAnswerRequest;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class AnswerService {
@@ -133,5 +136,39 @@ public class AnswerService {
                 .map(detail -> modelMapper.map(detail, AnswerDetailResponse.class))
                 .toList();
     }
+
+    /**
+     * ✅ Get all answer details for a specific expert
+     */
+    public List<AnswerDetailResponse> getAnswerDetailsByExpert(Integer expertId) {
+        List<AnswerDetail> details = IAnswerDetailRepository.findByExpertUserId(expertId);
+        return details.stream()
+                .map(detail -> modelMapper.map(detail, AnswerDetailResponse.class))
+                .collect(Collectors.toList());
+    }
+
+    /**
+     * ✅ Get all answer details for a specific user
+     */
+    public List<AnswerDetailResponse> getAnswerDetailsByUser(Integer userId) {
+        List<AnswerDetail> details = IAnswerDetailRepository.findByUserUserId(userId);
+        return details.stream()
+                .map(detail -> modelMapper.map(detail, AnswerDetailResponse.class))
+                .collect(Collectors.toList());
+    }
+
+    public List<AnswerResponse> searchAnswers(String expertName, String userName, Boolean isRight, Integer minRating) {
+        Specification<AnswerDetail> spec = AnswerDetailSpecification.byFilters(expertName, userName, isRight, minRating);
+        List<AnswerDetail> answerDetails = IAnswerDetailRepository.findAll(spec);
+
+        return answerDetails.stream()
+                .map(answerDetail -> {
+                    AnswerResponse response = modelMapper.map(answerDetail.getAnswer(), AnswerResponse.class);
+                    response.setIsRight(answerDetail.getIsRight());
+                    return response;
+                })
+                .collect(Collectors.toList());
+    }
+
 }
 

@@ -157,7 +157,23 @@ public class QuestionController {
     }
 
 
-    @Operation(summary = "Rechazar Pregunta", description = "Permite a los moderadores rechazar una pregunta con una justificación.")
+    @Operation(
+            summary = "Rechazar Pregunta",
+            description = "Permite a los moderadores rechazar una pregunta con una justificación.",
+            requestBody = @RequestBody(
+                    description = "Datos necesarios para rechazar una pregunta, incluyendo el ID de la pregunta y la justificación.",
+                    required = true,
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = RejectQuestionRequest.class))
+            ),
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "Pregunta rechazada con éxito.",
+                            content = @Content(mediaType = "application/json",
+                                    schema = @Schema(implementation = ActionResponse.class))),
+                    @ApiResponse(responseCode = "404", description = "Pregunta no encontrada.",
+                            content = @Content(schema = @Schema(ref = "#/components/schemas/Error")))
+            }
+    )
     @PostMapping("/reject")
     public ResponseEntity<ActionResponse<Void>> rejectQuestion(@RequestBody RejectQuestionRequest request) {
         questionService.rejectQuestion(request);

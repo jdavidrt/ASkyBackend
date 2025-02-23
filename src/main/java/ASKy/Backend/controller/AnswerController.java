@@ -126,4 +126,47 @@ public class AnswerController {
         ActionResponse<List<AnswerDetailResponse>> response = new ActionResponse<>(true, details, "Detalles de respuestas obtenidos con éxito.");
         return ResponseEntity.ok(response);
     }
+
+
+    @Operation(summary = "Obtener Detalles de Respuestas por Experto",
+            description = "Recupera detalles de respuestas asociadas a un experto específico.",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "Detalles encontrados con éxito.",
+                            content = @Content(mediaType = "application/json", schema = @Schema(implementation = AnswerDetailResponse.class)))
+            })
+    @GetMapping("/expert/{expertId}")
+    public ResponseEntity<List<AnswerDetailResponse>> getAnswerDetailsByExpert(@PathVariable Integer expertId) {
+        List<AnswerDetailResponse> responses = answerService.getAnswerDetailsByExpert(expertId);
+        return ResponseEntity.ok(responses);
+    }
+
+    @Operation(summary = "Obtener Detalles de Respuestas por Usuario",
+            description = "Recupera detalles de respuestas asociadas a un usuario específico.",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "Detalles encontrados con éxito.",
+                            content = @Content(mediaType = "application/json", schema = @Schema(implementation = AnswerDetailResponse.class)))
+            })
+    @GetMapping("/user/{userId}")
+    public ResponseEntity<List<AnswerDetailResponse>> getAnswerDetailsByUser(@PathVariable Integer userId) {
+        List<AnswerDetailResponse> responses = answerService.getAnswerDetailsByUser(userId);
+        return ResponseEntity.ok(responses);
+    }
+
+    @Operation(summary = "Buscar Respuestas con Filtros",
+            description = "Permite buscar respuestas con filtros opcionales: nombre del experto, nombre del usuario, si es correcta y calificación mínima.",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "Respuestas encontradas con éxito.",
+                            content = @Content(mediaType = "application/json", schema = @Schema(implementation = AnswerResponse.class)))
+            })
+    @GetMapping("/search")
+    public ResponseEntity<List<AnswerResponse>> searchAnswers(
+            @RequestParam(required = false) String expertName,
+            @RequestParam(required = false) String userName,
+            @RequestParam(required = false) Boolean isRight,
+            @RequestParam(required = false) Integer minRating
+    ) {
+        List<AnswerResponse> responses = answerService.searchAnswers(expertName, userName, isRight, minRating);
+        return ResponseEntity.ok(responses);
+    }
+
 }
