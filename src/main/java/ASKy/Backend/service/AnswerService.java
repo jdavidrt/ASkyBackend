@@ -13,7 +13,6 @@ import jakarta.persistence.EntityNotFoundException;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
-import ASKy.Backend.dto.request.RateAnswerRequest;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -38,33 +37,29 @@ public class AnswerService {
     }
 
     public AnswerResponse createAnswer(CreateAnswerRequest request, Integer userId) {
-        Question question = IQuestionRepository.findById(request.getQuestionId())
-                .orElseThrow(() -> new EntityNotFoundException("Pregunta no encontrada"));
+        Question question = IQuestionRepository.findByQuestionIdAndExpertUserId(request.getQuestionId(), request.getUserId())
+                .orElseThrow(() -> new EntityNotFoundException("Pregunta no encontrada o no asignada a este experto"));
 
-        Expert expert = (Expert) IUserRepository.findById(request.getExpertId())
-                .filter(User::getIsConsultant)
-                .orElseThrow(() -> new EntityNotFoundException("Usuario no es un experto"));
-
-        User user = IUserRepository.findById(request.getUserId())
-                .orElseThrow(() -> new EntityNotFoundException("Usuario no encontrado"));
+        // Check if the question already has an answer
+        if (question.getAnswer() != null) {
+            throw new IllegalArgumentException("Esta pregunta ya ha sido respondida o rechazada.");
+        }
 
         Answer answer = new Answer();
         answer.setQuestion(question);
-        answer.setUser(expert);
         answer.setBody(request.getBody());
+        answer.setType(request.getType());
         answer.setCreatedAt(LocalDateTime.now());
 
+        // Update question status based on the answer type
+        if (request.getType() == 1) {
+            question.setStatus((byte) 1); // Answered
+        } else {
+            question.setStatus((byte) 2); // Rejected
+        }
+
         Answer savedAnswer = IAnswerRepository.save(answer);
-
-        // 🔹 Create AnswerDetail entry
-        AnswerDetail answerDetail = new AnswerDetail();
-        answerDetail.setAnswer(savedAnswer);
-        answerDetail.setQuestion(question);
-        answerDetail.setExpert(expert);
-        answerDetail.setUser(question.getUser());
-        answerDetail.setIsRight(null); // Not evaluated yet
-
-        IAnswerDetailRepository.save(answerDetail);
+        IQuestionRepository.save(question);
 
         return modelMapper.map(savedAnswer, AnswerResponse.class);
     }
@@ -96,37 +91,15 @@ public class AnswerService {
                 .map(answer -> modelMapper.map(answer, AnswerResponse.class))
                 .toList();
     }
-    
-    public AnswerResponse rateAnswer(Integer answerId, RateAnswerRequest request) {
-    Answer answer = IAnswerRepository.findById(answerId)
-            .orElseThrow(() -> new EntityNotFoundException("Respuesta no encontrada"));
 
-    answer.setRating(request.getRating());
-    answer.setComment(request.getComment());
-    answer.setRatedAt(LocalDateTime.now());
-
-    Answer updatedAnswer = IAnswerRepository.save(answer);
-
-        // 🔹 Update AnswerDetail with correctness (threshold: 3 stars or higher)
-        AnswerDetail answerDetail = IAnswerDetailRepository.findById(answerId)
-                .orElseThrow(() -> new EntityNotFoundException("Registro de respuesta no encontrado"));
-
-        answerDetail.setIsRight(request.getRating() >= 3);
-        IAnswerDetailRepository.save(answerDetail);
-
-    return modelMapper.map(updatedAnswer, AnswerResponse.class);
-}
 
     private AnswerResponse mapToAnswerResponse(Answer answer) {
         AnswerResponse response = new AnswerResponse();
         response.setId(answer.getAnswerId());
+        response.setType(answer.getType());
         response.setBody(answer.getBody());
         response.setQuestionId(answer.getQuestion().getQuestionId());
-        response.setUserId(answer.getUser().getUserId());
         response.setCreatedAt(answer.getCreatedAt());
-        response.setRating(answer.getRating());
-        response.setComment(answer.getComment());
-        response.setRatedAt(answer.getRatedAt());
         return response;
     }
 
@@ -169,6 +142,7 @@ public class AnswerService {
                 })
                 .collect(Collectors.toList());
     }
+
 
 }
 

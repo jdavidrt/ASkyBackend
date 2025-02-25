@@ -28,14 +28,14 @@ public class RatingService {
         this.modelMapper = modelMapper;
     }
 
-    public RatingResponse rateAnswer(Integer userId, RateAnswerRequest request) {
+    public RatingResponse rateAnswer(RateAnswerRequest request) {
         Answer answer = IAnswerRepository.findById(request.getAnswerId())
                 .orElseThrow(() -> new EntityNotFoundException("Respuesta no encontrada"));
 
-        Expert expert = (Expert) IUserRepository.findById(answer.getUser().getUserId())
+        Expert expert = (Expert) IUserRepository.findById(answer.getQuestion().getExpert().getUserId())
                 .orElseThrow(() -> new EntityNotFoundException("Experto no encontrado"));
 
-        User user = IUserRepository.findById(userId)
+        User user = IUserRepository.findById(answer.getQuestion().getUser().getUserId())
                 .orElseThrow(() -> new EntityNotFoundException("Usuario no encontrado"));
 
         Rating rating = new Rating();

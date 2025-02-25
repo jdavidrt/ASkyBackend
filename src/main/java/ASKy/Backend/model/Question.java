@@ -45,6 +45,13 @@ public class Question {
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "expert_id", nullable = false)
+    private Expert expert;
+
+    @OneToOne(mappedBy = "question", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Answer answer; // One-to-one relationship with Answer
+
     @Column(name = "image_url")
     private String imageUrl;
 

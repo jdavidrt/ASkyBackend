@@ -3,14 +3,8 @@ package ASKy.Backend.service;
 import ASKy.Backend.dto.request.CreateQuestionRequest;
 import ASKy.Backend.dto.request.RejectQuestionRequest;
 import ASKy.Backend.dto.response.QuestionResponse;
-import ASKy.Backend.model.Notification;
-import ASKy.Backend.model.Question;
-import ASKy.Backend.model.Topic;
-import ASKy.Backend.model.User;
-import ASKy.Backend.repository.INotificationRepository;
-import ASKy.Backend.repository.IQuestionRepository;
-import ASKy.Backend.repository.ITopicRepository;
-import ASKy.Backend.repository.IUserRepository;
+import ASKy.Backend.model.*;
+import ASKy.Backend.repository.*;
 import jakarta.persistence.EntityNotFoundException;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
@@ -26,6 +20,7 @@ public class QuestionService {
 
     private final IQuestionRepository IQuestionRepository;
     private final IUserRepository IUserRepository;
+    private final IExpertRepository IExpertRepository;
     private final FileUploadService fileUploadService;
     private final ITopicRepository ITopicRepository;
     private final ModelMapper modelMapper;
@@ -33,12 +28,14 @@ public class QuestionService {
 
     public QuestionService(IQuestionRepository IQuestionRepository,
                            IUserRepository IUserRepository,
+                           IExpertRepository IExpertRepository,
                            FileUploadService fileUploadService,
                            ITopicRepository ITopicRepository,
                            ModelMapper modelMapper,
                            INotificationRepository INotificationRepository) {
         this.IQuestionRepository = IQuestionRepository;
         this.IUserRepository = IUserRepository;
+        this.IExpertRepository = IExpertRepository;
         this.fileUploadService = fileUploadService;
         this.ITopicRepository = ITopicRepository;
         this.modelMapper = modelMapper;
@@ -47,8 +44,12 @@ public class QuestionService {
 
     // Create a new question
     public QuestionResponse createQuestion(CreateQuestionRequest request, Integer userId) {
+
         User user = IUserRepository.findById(userId)
                 .orElseThrow(() -> new EntityNotFoundException("Usuario no encontrado"));
+
+        Expert expert = IExpertRepository.findById(request.getExpertId())
+                .orElseThrow(() -> new EntityNotFoundException("Experto no encontrado"));
 
         Topic topic = ITopicRepository.findById(request.getTopicId())
                 .orElseThrow(() -> new EntityNotFoundException("Tema no encontrado"));
@@ -73,6 +74,7 @@ public class QuestionService {
         question.setPrice(request.getPrice());
         question.setTopic(topic);
         question.setUser(user);
+        question.setExpert(expert);
         question.setDeadline(deadlineColombia);
         question.setCreatedAt(LocalDateTime.now(colombiaZone));
 

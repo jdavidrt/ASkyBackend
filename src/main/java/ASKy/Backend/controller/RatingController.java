@@ -22,9 +22,8 @@ public class RatingController {
 
     @Operation(summary = "Calificar Respuesta", description = "Permite a un usuario calificar una respuesta y su experto.")
     @PostMapping
-    public ResponseEntity<RatingResponse> rateAnswer(Principal principal, @RequestBody RateAnswerRequest request) {
-        Integer userId = Integer.parseInt(principal.getName()); // 🔹 Extract user ID from JWT
-        RatingResponse response = ratingService.rateAnswer(userId, request);
+    public ResponseEntity<RatingResponse> rateAnswer( @RequestBody RateAnswerRequest request) {
+        RatingResponse response = ratingService.rateAnswer(request);
         return ResponseEntity.ok(response);
     }
 }
