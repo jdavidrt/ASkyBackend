@@ -48,10 +48,31 @@ public class RatingService {
 
         IRatingRepository.save(rating);
 
+        // Transferir askoins al experto y descontar del usuario
+        transferAskoins(answer, expert, user, request.getRating());
         // 🔹 Update expert rating
         updateExpertRating(expert);
 
         return modelMapper.map(rating, RatingResponse.class);
+    }
+
+    private void transferAskoins(Answer answer, Expert expert, User user, int rating) {
+        Question question = answer.getQuestion();
+        float askoinAmount = question.getPrice();
+
+        // Calcular el pago basado en el rating (1 a 5 estrellas, cada estrella equivale al 20% del pago)
+        float paymentProportion = rating * 0.2f;
+        float paymentAmount = askoinAmount * paymentProportion;
+
+        // Transferir askoins al experto
+        expert.setAmountAskoins(expert.getAmountAskoins() + paymentAmount);
+
+        // Descontar askoins del usuario
+        user.setAmountAskoins(user.getAmountAskoins() - paymentAmount);
+
+        // Guardar cambios en los repositorios
+        IExpertRepository.save(expert);
+        IUserRepository.save(user);
     }
 
     private void updateExpertRating(Expert expert) {

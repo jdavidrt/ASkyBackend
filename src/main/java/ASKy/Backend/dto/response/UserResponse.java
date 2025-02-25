@@ -15,5 +15,7 @@ public class UserResponse {
     private Boolean availability;
     private Float responseRate;
     private String profileImageUrl;
+    private String biography;
+    private Float amountAskoins;
 
 }
