@@ -159,7 +159,7 @@ public class AnswerController {
                     @ApiResponse(responseCode = "200", description = "Answers retrieved successfully",
                             content = @Content(mediaType = "application/json", schema = @Schema(implementation = AnswerResponse.class)))
             })
-    @GetMapping("/search")
+    @GetMapping("/filter")
     public ResponseEntity<List<AnswerResponse>> filterAnswers(
             @RequestParam(required = false) String expertName,
             @RequestParam(required = false) String userName,

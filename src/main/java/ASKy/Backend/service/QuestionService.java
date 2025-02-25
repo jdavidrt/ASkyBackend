@@ -194,11 +194,12 @@ public class QuestionService {
     }
 
     public List<QuestionResponse> filterQuestions(String title, String body, Integer topicId, Integer userId, Integer expertId, Byte status) {
-        Specification<Question> spec = QuestionSpecification.byFilters(title, body, topicId, userId, expertId, status);
+        Specification<Question> spec = QuestionSpecification.byFilters(title, body, topicId, userId, expertId, status, "createdAt"); // 🔹 Added default orderBy
         List<Question> questions = IQuestionRepository.findAll(spec);
 
         return questions.stream()
                 .map(question -> modelMapper.map(question, QuestionResponse.class))
                 .collect(Collectors.toList());
     }
+
 }
