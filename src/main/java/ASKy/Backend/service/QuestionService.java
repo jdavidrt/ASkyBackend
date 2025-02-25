@@ -5,8 +5,10 @@ import ASKy.Backend.dto.request.RejectQuestionRequest;
 import ASKy.Backend.dto.response.QuestionResponse;
 import ASKy.Backend.model.*;
 import ASKy.Backend.repository.*;
+import ASKy.Backend.specification.QuestionSpecification;
 import jakarta.persistence.EntityNotFoundException;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -185,5 +187,14 @@ public class QuestionService {
         notification.setCreatedAt(LocalDateTime.now());
 
         INotificationRepository.save(notification);
+    }
+
+    public List<QuestionResponse> filterQuestions(String title, String body, Integer topicId, Integer userId, Integer expertId, Byte status) {
+        Specification<Question> spec = QuestionSpecification.byFilters(title, body, topicId, userId, expertId, status);
+        List<Question> questions = IQuestionRepository.findAll(spec);
+
+        return questions.stream()
+                .map(question -> modelMapper.map(question, QuestionResponse.class))
+                .collect(Collectors.toList());
     }
 }

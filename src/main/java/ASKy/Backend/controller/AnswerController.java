@@ -153,4 +153,20 @@ public class AnswerController {
         return ResponseEntity.ok(responses);
     }
 
+    @Operation(summary = "Search Answers",
+            description = "Filters answers based on expert name, user name, correctness, and rating.",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "Answers retrieved successfully",
+                            content = @Content(mediaType = "application/json", schema = @Schema(implementation = AnswerResponse.class)))
+            })
+    @GetMapping("/search")
+    public ResponseEntity<List<AnswerResponse>> filterAnswers(
+            @RequestParam(required = false) String expertName,
+            @RequestParam(required = false) String userName,
+            @RequestParam(required = false) Boolean isRight,
+            @RequestParam(required = false) Integer minRating) {
+        List<AnswerResponse> responses = answerService.filterAnswers(expertName, userName, isRight, minRating);
+        return ResponseEntity.ok(responses);
+    }
+
 }

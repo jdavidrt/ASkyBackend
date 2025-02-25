@@ -9,6 +9,7 @@ import ASKy.Backend.repository.IAnswerRepository;
 import ASKy.Backend.repository.IQuestionRepository;
 import ASKy.Backend.repository.IUserRepository;
 import ASKy.Backend.specification.AnswerDetailSpecification;
+import ASKy.Backend.specification.AnswerSpecification;
 import jakarta.persistence.EntityNotFoundException;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.jpa.domain.Specification;
@@ -143,6 +144,14 @@ public class AnswerService {
                 .collect(Collectors.toList());
     }
 
+    public List<AnswerResponse> filterAnswers(String expertName, String userName, Boolean isRight, Integer minRating) {
+        Specification<Answer> spec = AnswerSpecification.byFilters(expertName, userName, isRight, minRating);
+        List<Answer> answers = IAnswerRepository.findAll(spec);
+
+        return answers.stream()
+                .map(answer -> modelMapper.map(answer, AnswerResponse.class))
+                .collect(Collectors.toList());
+    }
 
 }
 
