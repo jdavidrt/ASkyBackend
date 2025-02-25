@@ -104,14 +104,14 @@ public class UserController {
                             content = @Content(schema = @Schema(ref = "#/components/schemas/Error")))
             }
     )
-    @PutMapping(value = "/profile/{auth0Id}", consumes = "multipart/form-data")
+    @PutMapping(value = "/profile/{Id}", consumes = "multipart/form-data")
     public ResponseEntity<ActionResponse<UserResponse>> updateProfile(
         //     Authentication authentication,
-            @Valid @RequestBody UpdateUserRequest request,@PathVariable String auth0Id) {
+            @Valid @RequestBody UpdateUserRequest request,@PathVariable String Id) {
 
         // String auth0Id = ((Jwt) authentication.getPrincipal()).getSubject();
 
-        UserResponse userResponse = userService.updateUserByAuth0Id(auth0Id, request);
+        UserResponse userResponse = userService.updateUserById(Id, request);
         ActionResponse<UserResponse> response = new ActionResponse<>(true, userResponse, ResponseMessage.USER_UPDATED_SUCCESS.getMessage());
         return ResponseEntity.ok(response);
     }
