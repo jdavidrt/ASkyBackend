@@ -186,7 +186,7 @@ public class QuestionController {
                     @ApiResponse(responseCode = "200", description = "Questions retrieved successfully",
                             content = @Content(mediaType = "application/json", schema = @Schema(implementation = QuestionResponse.class)))
             })
-    @GetMapping("/search")
+    @GetMapping("/filter")
     public ResponseEntity<List<QuestionResponse>> filterQuestions(
             @RequestParam(required = false) String title,
             @RequestParam(required = false) String body,
