@@ -21,30 +21,22 @@ public class Answer {
     @Column(name = "answer_id")
     private Integer answerId;
 
+    @Column(name = "type", nullable = false)
+    private Byte type = 0;  // 0 = Rejected, 1 = Accepted
+
     @Lob
     @Column(name = "body", nullable = false)
-    private String body;
+    private String body; // Can be an answer or a rejection reason
+
+    @OneToOne
+    @JoinColumn(name = "question_id", nullable = false, unique = true)
+    private Question question; // Each question has exactly one answer
+
+//    @OneToOne(mappedBy = "answer", cascade = CascadeType.ALL, orphanRemoval = true)
+//    private Rating rating; // One-to-One relationship with rating
 
     @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt;
-
-    @ManyToOne
-    @JoinColumn(name = "question_id", nullable = false)
-    private Question question;
-
-    @ManyToOne
-    @JoinColumn(name = "user_id", nullable = false)
-    private User user;
-
-    @Column(name = "rating")
-    private Integer rating;
-
-    @Lob
-    @Column(name = "comment")
-    private String comment;
-
-    @Column(name = "rated_at")
-    private LocalDateTime ratedAt;
 
     @PrePersist
     protected void onCreate() {

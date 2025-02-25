@@ -3,6 +3,7 @@ package ASKy.Backend.model;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Getter
@@ -35,6 +36,10 @@ public class Expert extends User{
 
     @Column(name = "sanctioned", nullable = false)
     private Boolean sanctioned = false;
+
+    // 🔹 One-to-Many: An Expert can have multiple Ratings
+    @OneToMany(mappedBy = "expert", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<Rating> ratings = new ArrayList<>();
 
     // 🔹 Relación con la tabla intermedia ExpertsTopics
     @OneToMany(mappedBy = "expert", cascade = CascadeType.ALL, fetch = FetchType.LAZY)

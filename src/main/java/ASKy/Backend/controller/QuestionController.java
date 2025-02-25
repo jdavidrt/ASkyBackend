@@ -180,5 +180,23 @@ public class QuestionController {
         return ResponseEntity.ok(new ActionResponse<>(true, null, "Pregunta rechazada exitosamente."));
     }
 
+    @Operation(summary = "Search Questions",
+            description = "Filters questions based on title, body, topic, user, expert, and status.",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "Questions retrieved successfully",
+                            content = @Content(mediaType = "application/json", schema = @Schema(implementation = QuestionResponse.class)))
+            })
+    @GetMapping("/search")
+    public ResponseEntity<List<QuestionResponse>> filterQuestions(
+            @RequestParam(required = false) String title,
+            @RequestParam(required = false) String body,
+            @RequestParam(required = false) Integer topicId,
+            @RequestParam(required = false) Integer userId,
+            @RequestParam(required = false) Integer expertId,
+            @RequestParam(required = false) Byte status) {
+        List<QuestionResponse> responses = questionService.filterQuestions(title, body, topicId, userId, expertId, status);
+        return ResponseEntity.ok(responses);
+    }
+
 }
 

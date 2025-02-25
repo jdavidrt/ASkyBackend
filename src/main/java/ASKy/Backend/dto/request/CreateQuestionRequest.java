@@ -23,6 +23,11 @@ public class CreateQuestionRequest {
     @NotNull
     private Integer topicId;
 
+    private Integer userId; // Client who asks the question
+
+    @NotNull
+    private Integer expertId; // Expert assigned to answer the question
+
     @NotNull
     @Future(message = "La fecha límite debe estar en el futuro")
     private LocalDateTime deadline;

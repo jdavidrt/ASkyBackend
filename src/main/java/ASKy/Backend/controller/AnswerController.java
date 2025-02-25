@@ -98,22 +98,6 @@ public class AnswerController {
         return ResponseEntity.ok(response);
     }
 
-    @Operation(summary = "Calificar Respuesta",
-            description = "Califica una respuesta específica identificada por su ID.",
-            responses = {
-                    @ApiResponse(responseCode = "200", description = "Respuesta calificada con éxito.",
-                            content = @Content(mediaType = "application/json", schema = @Schema(implementation = AnswerResponse.class))),
-                    @ApiResponse(responseCode = "404", description = "Respuesta no encontrada.",
-                            content = @Content(schema = @Schema(ref = "#/components/schemas/Error")))
-            })
-    @PostMapping("/rate/{answerId}")
-    public ResponseEntity<ActionResponse<AnswerResponse>> rateAnswer(@PathVariable Integer answerId, @Valid @RequestBody RateAnswerRequest request) {
-
-        AnswerResponse answerResponse = answerService.rateAnswer(answerId, request);
-        ActionResponse<AnswerResponse> response = new ActionResponse<>(true, answerResponse, ResponseMessage.ANSWER_RATED_SUCCESS.getMessage());
-        return ResponseEntity.ok(response);
-    }
-
     @Operation(summary = "Obtener Detalles de Respuestas por Pregunta",
             description = "Recupera detalles de respuestas asociadas a una pregunta específica.",
             responses = {
@@ -166,6 +150,22 @@ public class AnswerController {
             @RequestParam(required = false) Integer minRating
     ) {
         List<AnswerResponse> responses = answerService.searchAnswerDetails(expertName, userName, isRight, minRating);
+        return ResponseEntity.ok(responses);
+    }
+
+    @Operation(summary = "Search Answers",
+            description = "Filters answers based on expert name, user name, correctness, and rating.",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "Answers retrieved successfully",
+                            content = @Content(mediaType = "application/json", schema = @Schema(implementation = AnswerResponse.class)))
+            })
+    @GetMapping("/search")
+    public ResponseEntity<List<AnswerResponse>> filterAnswers(
+            @RequestParam(required = false) String expertName,
+            @RequestParam(required = false) String userName,
+            @RequestParam(required = false) Boolean isRight,
+            @RequestParam(required = false) Integer minRating) {
+        List<AnswerResponse> responses = answerService.filterAnswers(expertName, userName, isRight, minRating);
         return ResponseEntity.ok(responses);
     }
 

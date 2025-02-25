@@ -5,6 +5,9 @@ import lombok.Data;
 
 @Data
 public class CreateAnswerRequest {
+    @NotNull
+    private Byte type;
+
     @NotBlank
     private String body;
 
