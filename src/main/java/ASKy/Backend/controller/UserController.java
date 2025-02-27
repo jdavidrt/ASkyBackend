@@ -107,7 +107,11 @@ public class UserController {
     @PutMapping(value = "/profile/{Id}", consumes = "multipart/form-data")
     public ResponseEntity<ActionResponse<UserResponse>> updateProfile(
         //     Authentication authentication,
+<<<<<<< HEAD
             @Valid @RequestBody UpdateUserRequest request,@PathVariable int Id) {
+=======
+            @Valid @RequestBody UpdateUserRequest request,@PathVariable Integer Id) {
+>>>>>>> c7fe3c1a6ea2542867be894ddf11cb32e5c595f8
 
         // String auth0Id = ((Jwt) authentication.getPrincipal()).getSubject();
 

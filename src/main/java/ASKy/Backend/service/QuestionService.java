@@ -68,6 +68,10 @@ public class QuestionService {
             throw new IllegalArgumentException("La fecha límite debe estar en el futuro en la zona horaria de Colombia.");
         }
 
+        if (user.getAmountAskoins()<request.getPrice()){
+            throw new IllegalArgumentException("No tienes suficientes askoins para realizar esta pregunta");
+        }
+
 
 
         Question question = new Question();
