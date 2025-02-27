@@ -103,13 +103,9 @@ public class UserService {
         return modelMapper.map(updatedUser, UserResponse.class);
     }
 
-<<<<<<< HEAD
-    public UserResponse updateUserById(int auth0Id, UpdateUserRequest request) {
-        User user = IUserRepository.findById(auth0Id)
-=======
+
     public UserResponse updateUserById(Integer Id, UpdateUserRequest request) {
         User user = IUserRepository.findById(Id)
->>>>>>> c7fe3c1a6ea2542867be894ddf11cb32e5c595f8
                 .orElseThrow(() -> new EntityNotFoundException("Usuario no encontrado"));
 
         // Map only the fields that are present in the request
