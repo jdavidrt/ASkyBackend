@@ -7,7 +7,7 @@ import java.time.LocalDateTime;
 @Data
 public class AnswerResponse {
     private Integer id;
-    private Byte type;
+    private String type;
     private String body;
     private Integer questionId;
     private Integer userId;

@@ -89,7 +89,7 @@ public class AnswerService {
 
     public List<AnswerResponse> getAllAnswers() {
         return IAnswerRepository.findAll().stream()
-                .map(answer -> modelMapper.map(answer, AnswerResponse.class))
+                .map(this::mapToAnswerResponse) // ✅ Usamos el nuevo método de mapeo
                 .toList();
     }
 
@@ -97,11 +97,15 @@ public class AnswerService {
     private AnswerResponse mapToAnswerResponse(Answer answer) {
         AnswerResponse response = new AnswerResponse();
         response.setId(answer.getAnswerId());
-        response.setType(answer.getType());
+        response.setType(mapAnswerType(answer.getType()));
         response.setBody(answer.getBody());
         response.setQuestionId(answer.getQuestion().getQuestionId());
         response.setCreatedAt(answer.getCreatedAt());
         return response;
+    }
+
+    private String mapAnswerType(Byte type) {
+        return type != null && type == 1 ? "accepted" : "rejected";
     }
 
     public List<AnswerDetailResponse> getAnswerDetailsByQuestion(Integer questionId) {
