@@ -1,11 +1,11 @@
 INSERT INTO topics (name, description) VALUES
-('Mathematics', 'Study of numbers and equations'),
-('Physics', 'Study of matter and energy'),
-('History', 'Study of past events'),
-('Computer Science', 'Study of computational systems'),
-('Chemistry', 'Study of substances and their properties'),
-('Engineering', 'Study of designing and building machines'),
-('Art', 'Study of creative visual works'),
-('Music', 'Study of sound and harmony'),
-('Philosophy', 'Study of fundamental nature of knowledge'),
-('Economics', 'Study of production and consumption of goods');
+('Matemáticas', 'Estudio de los números y ecuaciones'),
+('Física', 'Estudio de la materia y la energía'),
+('Historia', 'Estudio de los eventos del pasado'),
+('Informática', 'Estudio de los sistemas computacionales'),
+('Química', 'Estudio de las sustancias y sus propiedades'),
+('Ingeniería', 'Estudio del diseño y construcción de máquinas'),
+('Arte', 'Estudio de las obras visuales creativas'),
+('Música', 'Estudio del sonido y la armonía'),
+('Filosofía', 'Estudio de la naturaleza fundamental del conocimiento'),
+('Economía', 'Estudio de la producción y consumo de bienes');

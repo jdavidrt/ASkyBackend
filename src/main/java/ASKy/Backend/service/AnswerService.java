@@ -106,7 +106,7 @@ public class AnswerService {
     }
 
     private String mapAnswerType(Byte type) {
-        return type != null && type == 1 ? "accepted" : "rejected";
+        return type != null && type == 1 ? "aceptado" : "rechazado";
     }
 
     public List<AnswerDetailResponse> getAnswerDetailsByQuestion(Integer questionId) {

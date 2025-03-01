@@ -139,17 +139,17 @@ public class QuestionService {
 
     // 🔹 Convert `active` (Byte) to a String ("open" or "closed")
     private String mapActiveStatus(Byte active) {
-        return active != null && active == 1 ? "open" : "closed";
+        return active != null && active == 1 ? "abierto" : "cerrado";
     }
 
     // 🔹 Convert `status` (Byte) to a String
     private String mapStatus(Byte status) {
         return switch (status) {
-            case 0 -> "pending";
-            case 1 -> "accepted";
-            case 2 -> "rejected";
-            case 3 -> "canceled";
-            default -> "unknown";
+            case 0 -> "pendiente";
+            case 1 -> "aceptado";
+            case 2 -> "rechazado";
+            case 3 -> "cancelado";
+            default -> "desconocido";
         };
     }
 
