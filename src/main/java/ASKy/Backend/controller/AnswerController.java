@@ -39,8 +39,8 @@ public class AnswerController {
                             content = @Content(schema = @Schema(ref = "#/components/schemas/Error")))
             })
     @PostMapping
-    public ResponseEntity<ActionResponse<AnswerResponse>> createAnswer(@Valid @RequestBody CreateAnswerRequest request, @RequestParam Integer userId) {
-        AnswerResponse answerResponse = answerService.createAnswer(request, userId);
+    public ResponseEntity<ActionResponse<AnswerResponse>> createAnswer(@Valid @RequestBody CreateAnswerRequest request) {
+        AnswerResponse answerResponse = answerService.createAnswer(request);
         ActionResponse<AnswerResponse> response = new ActionResponse<>(true, answerResponse, ResponseMessage.ANSWER_CREATED_SUCCESS.getMessage());
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }

@@ -14,7 +14,7 @@ public interface IQuestionRepository extends JpaRepository<Question, Integer>, J
     List<Question> findByUserUserId(Integer userId);
     List<Question> findAllByUserUserId(Integer userId);
 
-    Optional<Question> findByQuestionIdAndExpertUserId(Integer questionId, Integer expertId);
+    Optional<Question> findByQuestionId(Integer questionId);
 
     // Buscar preguntas por título o cuerpo
     List<Question> findByTitleContainingOrBodyContaining(String titleKeyword, String bodyKeyword);

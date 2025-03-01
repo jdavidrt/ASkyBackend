@@ -52,9 +52,8 @@ public class QuestionController {
     )
     @PostMapping(consumes = "multipart/form-data")
     public ResponseEntity<ActionResponse<QuestionResponse>> createQuestion(
-            @Valid @RequestBody CreateQuestionRequest request,
-            @RequestParam Integer userId) {
-        QuestionResponse questionResponse = questionService.createQuestion(request, userId);
+            @Valid @RequestBody CreateQuestionRequest request) {
+        QuestionResponse questionResponse = questionService.createQuestion(request);
         ActionResponse<QuestionResponse> response = new ActionResponse<>(
                 true, questionResponse, ResponseMessage.QUESTION_CREATED_SUCCESS.getMessage());
         return ResponseEntity.status(HttpStatus.CREATED).body(response);

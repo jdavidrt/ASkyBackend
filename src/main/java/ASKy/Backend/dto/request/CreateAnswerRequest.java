@@ -14,10 +14,10 @@ public class CreateAnswerRequest {
     @NotNull
     private Integer questionId;
 
-    @NotNull
-    private Integer expertId; //  Track which expert provided the answer
-
-    @NotNull
-    private Integer userId; //  Track which user received the answer
+//    @NotNull
+//    private Integer expertId;
+//
+//    @NotNull
+//    private Integer userId;
 
 }

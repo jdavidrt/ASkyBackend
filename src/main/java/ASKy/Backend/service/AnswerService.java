@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -37,8 +38,8 @@ public class AnswerService {
         this.modelMapper = modelMapper;
     }
 
-    public AnswerResponse createAnswer(CreateAnswerRequest request, Integer userId) {
-        Question question = IQuestionRepository.findByQuestionIdAndExpertUserId(request.getQuestionId(), request.getUserId())
+    public AnswerResponse createAnswer(CreateAnswerRequest request) {
+        Question question = IQuestionRepository.findByQuestionId(request.getQuestionId())
                 .orElseThrow(() -> new EntityNotFoundException("Pregunta no encontrada o no asignada a este experto"));
 
         // Check if the question already has an answer
@@ -66,7 +67,7 @@ public class AnswerService {
     }
 
     public List<AnswerResponse> getAnswersByQuestion(Integer questionId) {
-        List<Answer> answers = IAnswerRepository.findByQuestionQuestionId(questionId);
+       Optional<Answer> answers = IAnswerRepository.findById(questionId);
         return answers.stream()
                 .map(answer -> modelMapper.map(answer, AnswerResponse
                         .class))

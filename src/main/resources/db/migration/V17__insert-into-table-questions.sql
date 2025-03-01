@@ -9,5 +9,6 @@ VALUES
 ('What is the Pythagorean theorem used for?', 'Explain with real-life applications.', 8, 1, 0, 8, 7, 1, "https://physics.ucf.edu/~klemm/Problems%20Week%209_Page_1.jpg", NOW() + INTERVAL 2 DAY),
 ('How does the immune system fight viruses?', 'Looking for an easy-to-understand explanation.', 22, 1, 0, 9, 9, 2, "https://physics.ucf.edu/~klemm/Problems%20Week%206_Page_5.jpg", NOW() + INTERVAL 6 DAY),
 ('What are the basic principles of supply and demand?', 'Provide examples related to real markets.', 16, 1, 0, 10, 3, 8, "https://physics.ucf.edu/~klemm/Problems%20Week%206_Page_4.jpg", NOW() + INTERVAL 5 DAY),
-('How does quantum entanglement work?', 'Please explain in simple terms.', 25, 1, 0, 10, 5, 10, "https://physics.ucf.edu/~klemm/Problems%20Week%206_Page_2.jpg", NOW() + INTERVAL 7 DAY);
+('How does quantum entanglement work?', 'Please explain in simple terms.', 25, 1, 0, 10, 5, 10, "https://physics.ucf.edu/~klemm/Problems%20Week%206_Page_2.jpg", NOW() + INTERVAL 7 DAY),
+('What is the Fibonacci sequence?', 'Explain its significance in mathematics and nature.', 13, 1, 0, 1, 12, 11, "https://physics.ucf.edu/~klemm/Problems%20Week%205_Page_3.jpg", NOW() + INTERVAL 4 DAY);
 

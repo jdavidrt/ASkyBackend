@@ -45,9 +45,9 @@ public class QuestionService {
     }
 
     // Create a new question
-    public QuestionResponse createQuestion(CreateQuestionRequest request, Integer userId) {
+    public QuestionResponse createQuestion(CreateQuestionRequest request) {
 
-        User user = IUserRepository.findById(userId)
+        User user = IUserRepository.findById(request.getUserId())
                 .orElseThrow(() -> new EntityNotFoundException("Usuario no encontrado"));
 
         Expert expert = IExpertRepository.findById(request.getExpertId())

@@ -9,5 +9,6 @@ VALUES
 ('auth0|1007', 'Grace', 'Taylor', 'grace.taylor@example.com', 'hashed_password_7', "https://i2.pickpik.com/photos/445/293/255/beautiful-redhead-winter-snow-preview.jpg", FALSE, TRUE, 5.0),
 ('auth0|1008', 'Henry', 'Moore', 'henry.moore@example.com', 'hashed_password_8', "https://i0.pickpik.com/photos/19/782/563/man-red-hair-beard-red-beard-preview.jpg", TRUE, TRUE, 70.0),
 ('auth0|1009', 'Isabella', 'Anderson', 'isabella.anderson@example.com', 'hashed_password_9', "https://i2.pickpik.com/photos/290/494/420/fashion-model-girl-pretty-fashion-preview.jpg", FALSE, TRUE, 90.0),
-('auth0|1010', 'Jack', 'White', 'jack.white@example.com', 'hashed_password_10', "https://i1.pickpik.com/photos/74/106/511/adult-beard-checkered-shirt-fashion-preview.jpg", TRUE, TRUE, 25.0);
-
+('auth0|1010', 'Jack', 'White', 'jack.white@example.com', 'hashed_password_10', "https://i1.pickpik.com/photos/74/106/511/adult-beard-checkered-shirt-fashion-preview.jpg", TRUE, TRUE, 25.0),
+('auth0|1011', 'Alice', 'Johnson', 'alice.smaller@example.com', 'hashed_password_1', 'https://i1.pickpik.com/photos/781/224/981/596898a313784-preview.jpg', TRUE, TRUE, 50.0),
+('auth0|1012', 'Charlie', 'Brown', 'charlie.binnom@example.com', 'hashed_password_3', 'https://i1.pickpik.com/photos/286/766/546/beard-close-up-face-facial-expression-preview.jpg', FALSE, TRUE, 30.0);
