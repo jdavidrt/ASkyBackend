@@ -9,6 +9,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class RatingService {
@@ -100,6 +101,20 @@ public class RatingService {
         }
 
         IExpertRepository.save(expert);
+    }
+
+    public RatingResponse getRatingByAnswerId(Integer answerId) {
+        Rating rating = IRatingRepository.findByAnswerAnswerId(answerId)
+                .orElseThrow(() -> new EntityNotFoundException("Calificación no encontrada para esta respuesta"));
+
+        return modelMapper.map(rating, RatingResponse.class);
+    }
+
+    public List<RatingResponse> getAllRatings() {
+        List<Rating> ratings = IRatingRepository.findAll();
+        return ratings.stream()
+                .map(rating -> modelMapper.map(rating, RatingResponse.class))
+                .collect(Collectors.toList());
     }
 }
 

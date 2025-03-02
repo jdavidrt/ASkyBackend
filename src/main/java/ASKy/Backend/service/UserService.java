@@ -115,9 +115,13 @@ public class UserService {
         if (request.getDescription() != null) user.setProfileImageUrl(request.getDescription());
         if (request.getIsConsultant() != null) user.setIsConsultant(request.getIsConsultant());
         if (request.getStatus() != null) user.setStatus(request.getStatus());
-//        if (request.getBiography() != null) user.setBiography(request.getBiography());
-//        if (request.getBasePrice() != null) user.setBasePrice(request.getBasePrice());
-//        if (request.getAvailability() != null) user.setAvailability(request.getAvailability());
+
+        // If user is an expert, ensure expert-specific fields are updated
+        if (Boolean.TRUE.equals(user.getIsConsultant()) && user instanceof Expert expert) {
+            if (request.getBiography() != null) expert.setBiography(request.getBiography());
+            if (request.getBasePrice() != null) expert.setBasePrice(request.getBasePrice());
+            if (request.getAvailability() != null) expert.setAvailability(request.getAvailability());
+        }
 
         // 🔹 Handle profile image update
         if (request.getProfileImage() != null && !request.getProfileImage().isEmpty()) {
