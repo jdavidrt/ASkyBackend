@@ -6,7 +6,6 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
@@ -26,22 +25,7 @@ public class RatingController {
         this.ratingService = ratingService;
     }
 
-    @Operation(
-            summary = "Calificar una Respuesta",
-            description = "Permite a un usuario calificar la respuesta de un experto.",
-            requestBody = @RequestBody(
-                    description = "Datos de la calificación.",
-                    required = true,
-                    content = @Content(mediaType = "application/json",
-                            schema = @Schema(implementation = RateAnswerRequest.class))
-            ),
-            responses = {
-                    @ApiResponse(responseCode = "200", description = "Respuesta calificada con éxito.",
-                            content = @Content(mediaType = "application/json",
-                                    schema = @Schema(implementation = RatingResponse.class))),
-                    @ApiResponse(responseCode = "404", description = "Respuesta no encontrada.")
-            }
-    )
+    @Operation(summary = "Calificar Respuesta", description = "Permite a un usuario calificar una respuesta y su experto.")
     @PostMapping
     public ResponseEntity<RatingResponse> rateAnswer(@Valid @RequestBody RateAnswerRequest request) {
         RatingResponse response = ratingService.rateAnswer(request);
