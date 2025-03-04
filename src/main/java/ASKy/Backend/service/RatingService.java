@@ -116,5 +116,12 @@ public class RatingService {
                 .map(rating -> modelMapper.map(rating, RatingResponse.class))
                 .collect(Collectors.toList());
     }
+
+    public void deleteRating(Integer ratingId) {
+        Rating rating = IRatingRepository.findById(ratingId)
+                .orElseThrow(() -> new EntityNotFoundException("Calificación no encontrada"));
+
+        IRatingRepository.delete(rating);
+    }
 }
 

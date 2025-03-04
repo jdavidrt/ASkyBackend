@@ -19,7 +19,7 @@ public class Rating {
     private Integer ratingId;
 
     @OneToOne
-    @JoinColumn(name = "user_id", nullable = false) // Cliente que da la calificación
+    @JoinColumn(name = "user_id", nullable = false, unique = true) // Cliente que da la calificación
     private User user;
 
     @ManyToOne
@@ -38,7 +38,7 @@ public class Rating {
     private LocalDateTime createdAt;
 
     @OneToOne
-    @JoinColumn(name = "answer_id", nullable = false) // 🔹 Relate rating to the answer
+    @JoinColumn(name = "answer_id", nullable = false, unique = true) // 🔹 Relate rating to the answer
     private Answer answer;
 
 //    @OneToOne

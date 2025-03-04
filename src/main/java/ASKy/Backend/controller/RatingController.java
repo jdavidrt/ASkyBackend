@@ -1,5 +1,6 @@
 package ASKy.Backend.controller;
 import ASKy.Backend.dto.request.RateAnswerRequest;
+import ASKy.Backend.dto.response.ActionResponse;
 import ASKy.Backend.dto.response.RatingResponse;
 import ASKy.Backend.service.RatingService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -61,5 +62,20 @@ public class RatingController {
     public ResponseEntity<List<RatingResponse>> getAllRatings() {
         List<RatingResponse> response = ratingService.getAllRatings();
         return ResponseEntity.ok(response);
+    }
+
+
+    @Operation(summary = "Eliminar Calificación",
+            description = "Elimina una calificación específica identificada por su ID.",
+            responses = {
+                    @ApiResponse(responseCode = "204", description = "Calificación eliminada con éxito."),
+                    @ApiResponse(responseCode = "404", description = "Calificación no encontrada.",
+                            content = @Content(schema = @Schema(ref = "#/components/schemas/Error")))
+            })
+    @DeleteMapping("/{ratingId}")
+    public ResponseEntity<ActionResponse<Void>> deleteRating(@PathVariable Integer ratingId) {
+        ratingService.deleteRating(ratingId);
+        ActionResponse<Void> response = new ActionResponse<>(true, null, "Calificación eliminada con éxito.");
+        return ResponseEntity.noContent().build();
     }
 }
