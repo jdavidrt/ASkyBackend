@@ -10,6 +10,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -35,6 +36,12 @@ public class QuestionController {
     @Operation(
             summary = "Crear Pregunta",
             description = "Crea una nueva pregunta asociada a un usuario específico.",
+            requestBody = @RequestBody(
+                    description = "Datos de la pregunta, incluyendo imagen opcional",
+                    required = true,
+                    content = @Content(mediaType = "multipart/form-data",
+                            schema = @Schema(implementation = CreateQuestionRequest.class))
+            ),
             responses = {
                     @ApiResponse(responseCode = "201", description = "Pregunta creada con éxito",
                             content = @Content(mediaType = "application/json",
@@ -152,6 +159,12 @@ public class QuestionController {
     @Operation(
             summary = "Rechazar Pregunta",
             description = "Permite a los moderadores rechazar una pregunta con una justificación.",
+            requestBody = @RequestBody(
+                    description = "Datos necesarios para rechazar una pregunta, incluyendo el ID de la pregunta y la justificación.",
+                    required = true,
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = RejectQuestionRequest.class))
+            ),
             responses = {
                     @ApiResponse(responseCode = "200", description = "Pregunta rechazada con éxito.",
                             content = @Content(mediaType = "application/json",

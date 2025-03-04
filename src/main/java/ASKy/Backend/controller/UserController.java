@@ -10,6 +10,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
@@ -35,6 +36,12 @@ public class UserController {
     @Operation(
             summary = "Crear Usuario",
             description = "Crea un nuevo usuario y lo guarda en la base de datos.",
+            requestBody = @RequestBody(
+                    description = "Datos del usuario incluyendo imagen de perfil opcional",
+                    required = true,
+                    content = @Content(mediaType = "multipart/form-data",
+                            schema = @Schema(implementation = CreateUserRequest.class))
+            ),
             responses = {
                     @ApiResponse(responseCode = "201", description = "Usuario creado con éxito",
                             content = @Content(mediaType = "application/json",
@@ -83,6 +90,12 @@ public class UserController {
     @Operation(
             summary = "Actualizar Usuario",
             description = "Actualiza los datos de un usuario específico identificado por su Auth0 ID. Permite actualizar la imagen de perfil opcionalmente.",
+            requestBody = @RequestBody(
+                    description = "Datos del usuario a actualizar, incluyendo imagen de perfil opcional.",
+                    required = true,
+                    content = @Content(mediaType = "multipart/form-data",
+                            schema = @Schema(implementation = UpdateUserRequest.class))
+            ),
             responses = {
                     @ApiResponse(responseCode = "200", description = "Usuario actualizado con éxito.",
                             content = @Content(mediaType = "application/json",
