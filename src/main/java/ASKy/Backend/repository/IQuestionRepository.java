@@ -18,5 +18,6 @@ public interface IQuestionRepository extends JpaRepository<Question, Integer>, J
 
     // Buscar preguntas por título o cuerpo
     List<Question> findByTitleContainingOrBodyContaining(String titleKeyword, String bodyKeyword);
+    long countByExpertUserId(Integer expertId);
 }
 

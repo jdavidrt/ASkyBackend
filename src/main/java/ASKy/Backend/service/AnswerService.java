@@ -8,6 +8,7 @@ import ASKy.Backend.repository.IAnswerDetailRepository;
 import ASKy.Backend.repository.IAnswerRepository;
 import ASKy.Backend.repository.IQuestionRepository;
 import ASKy.Backend.repository.IUserRepository;
+import ASKy.Backend.repository.IExpertRepository;
 import ASKy.Backend.specification.AnswerDetailSpecification;
 import ASKy.Backend.specification.AnswerSpecification;
 import jakarta.persistence.EntityNotFoundException;
@@ -27,14 +28,16 @@ public class AnswerService {
     private final IQuestionRepository IQuestionRepository;
     private final IUserRepository IUserRepository;
     private final IAnswerDetailRepository IAnswerDetailRepository;
+    private final IExpertRepository IExpertRepository;
     private final ModelMapper modelMapper;
 
     public AnswerService(IAnswerRepository IAnswerRepository, IQuestionRepository IQuestionRepository,
-                         IUserRepository IUserRepository, IAnswerDetailRepository IAnswerDetailRepository, ModelMapper modelMapper) {
+                         IUserRepository IUserRepository, IAnswerDetailRepository IAnswerDetailRepository, IExpertRepository IExpertRepositor, ModelMapper modelMapper) {
         this.IAnswerRepository = IAnswerRepository;
         this.IQuestionRepository = IQuestionRepository;
         this.IUserRepository = IUserRepository;
         this.IAnswerDetailRepository = IAnswerDetailRepository;
+        this.IExpertRepository = IExpertRepositor;
         this.modelMapper = modelMapper;
     }
 
@@ -46,6 +49,9 @@ public class AnswerService {
         if (question.getAnswer() != null) {
             throw new IllegalArgumentException("Esta pregunta ya ha sido respondida o rechazada.");
         }
+
+        Expert expert = (Expert) IUserRepository.findById(question.getExpert().getUserId())
+                .orElseThrow(() -> new EntityNotFoundException("Experto no encontrado"));
 
         Answer answer = new Answer();
         answer.setQuestion(question);
@@ -63,7 +69,25 @@ public class AnswerService {
         Answer savedAnswer = IAnswerRepository.save(answer);
         IQuestionRepository.save(question);
 
+        updateResponseRate(expert);
+
         return modelMapper.map(savedAnswer, AnswerResponse.class);
+    }
+
+    private void updateResponseRate(Expert expert) {
+        // Contar el total de preguntas asignadas al experto
+        long totalAssignedQuestions = IQuestionRepository.countByExpertUserId(expert.getUserId());
+
+        if (totalAssignedQuestions == 0) {
+            expert.setResponseRate(0.0f);
+        } else {
+            // Contar las respuestas aceptadas (tipo = 1)
+            long totalResponses = IAnswerRepository.countByQuestionExpertUserIdAndType(expert.getUserId(), (byte) 1);
+
+            float rate = ((float) totalResponses / totalAssignedQuestions) * 100;
+            expert.setResponseRate(rate);
+        }
+        IExpertRepository.save(expert);
     }
 
     public List<AnswerResponse> getAnswersByQuestion(Integer questionId) {
