@@ -10,6 +10,7 @@ import jakarta.persistence.EntityNotFoundException;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+import ASKy.Backend.service.EmailService;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
@@ -95,6 +96,8 @@ public class QuestionService {
         }
 
         Question savedQuestion = IQuestionRepository.save(question);
+
+
         return modelMapper.map(savedQuestion, QuestionResponse.class);
     }
 
