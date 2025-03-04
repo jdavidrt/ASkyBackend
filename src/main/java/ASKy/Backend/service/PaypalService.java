@@ -1,6 +1,7 @@
 package ASKy.Backend.service;
 
 import ASKy.Backend.dto.request.CreateTransactionRequest;
+import ASKy.Backend.dto.response.EmailResponse;
 import ASKy.Backend.dto.response.URLPaypalResponse;
 import ASKy.Backend.repository.ITransactionRepository;
 import com.paypal.api.payments.*;
@@ -12,13 +13,18 @@ import ASKy.Backend.model.User;
 import ASKy.Backend.model.Expert;
 import ASKy.Backend.repository.IUserRepository;
 import jakarta.persistence.EntityNotFoundException;
+import ASKy.Backend.service.EmailService;
 
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.UUID;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class PaypalService {
@@ -26,6 +32,7 @@ public class PaypalService {
     private final APIContext apiContext;
     private final ITransactionRepository transactionRepository;
     private final IUserRepository userRepository;
+    private  final EmailService emailService;
 
     private static final float EXCHANGE_RATE = 1.0f; // 1 ASKoin = 1000 COP
     private static final float PLATFORM_FEE = 0.10f; // 10% fee
@@ -132,6 +139,23 @@ public class PaypalService {
             PayoutBatch payoutBatch = createExpertPayout(request, expertId);
             String payoutId = payoutBatch.getBatchHeader().getPayoutBatchId();
             String status = payoutBatch.getBatchHeader().getBatchStatus();
+
+            User expert = userRepository.findById(expertId)
+                    .orElseThrow(() -> new EntityNotFoundException("Usuario experto no encontrado"));
+
+            EmailResponse response = emailService.sendWithdrawalConfirmation(expert.getEmail(),
+                    expert.getFirstName()
+                    ,"$"
+                    ,request.getAskoinAmount()
+                    ,expert.getEmail()
+                    , LocalDateTime.now().toString()
+                    ,payoutId);
+
+
+            if (!response.isSuccess()) {
+                log.error("Error al enviar correo de nueva consulta: {}", response.getMessage());
+                // Implementar lógica de reintento o notificación al administrador
+            }
 
             // Aquí podrías devolver una URL a un panel donde el experto puede ver el estado de su retiro
             // O simplemente devolver un mensaje con el estado

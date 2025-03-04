@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nueva Consulta en ASKy - Se Requiere tu Experiencia</title>
+</head>
+<body style="margin: 0; padding: 0; background-color: #f4f7f9; font-family: 'Be Vietnam Pro', Arial, sans-serif;">
+<table role="presentation" style="width: 100%; border-collapse: collapse;">
+    <tr>
+        <td align="center" style="padding: 40px 0;">
+            <table role="presentation" style="width: 600px; border-collapse: collapse; background-color: #ffffff; border-radius: 8px; overflow: hidden; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);">
+                <!-- Header -->
+                <tr>
+                    <td style="background-color: #00FFFF; padding: 30px 40px;">
+                        <img src="https://tu-dominio.com/path-to-asky-logo.png" alt="ASKy Logo" width="120" style="display: block;">
+                    </td>
+                </tr>
+                <!-- Content -->
+                <tr>
+                    <td style="padding: 40px;">
+                        <h1 style="color: #1a202c; font-family: 'Fira Mono', 'Courier New', monospace; font-size: 28px; font-weight: 700; line-height: 1.2; margin: 0 0 20px; text-align: left;">¡Nueva Consulta Disponible!</h1>
+                        <p style="color: #4a5568; font-size: 16px; line-height: 1.5; margin: 0 0 20px;">
+                            Hola <span style="color: #2d3748; font-weight: 600;" th:text="${expertName}">Experto</span>,
+                        </p>
+                        <p style="color: #4a5568; font-size: 16px; line-height: 1.5; margin: 0 0 20px;">
+                            Se ha recibido una nueva consulta en tu área de experiencia. Los detalles son:
+                        </p>
+                        <table role="presentation" style="width: 100%; border-collapse: collapse; margin-bottom: 20px;">
+                            <tr>
+                                <td style="background-color: #e6ffff; border-left: 4px solid #00FFFF; padding: 15px;">
+                                    <p style="color: #2d3748; font-size: 16px; font-weight: 600; line-height: 1.5; margin: 0 0 10px;">
+                                        Tema: <span th:text="${consultationTopic}">Tema de la consulta</span>
+                                    </p>
+                                    <p style="color: #4a5568; font-size: 14px; line-height: 1.5; margin: 0;">
+                                        Categoría: <span th:text="${category}">Categoría</span>
+                                    </p>
+                                </td>
+                            </tr>
+                        </table>
+                        <p style="color: #4a5568; font-size: 16px; line-height: 1.5; margin: 0 0 20px;">
+                            Tu experiencia es fundamental para proporcionar una respuesta de calidad. Por favor, revisa la consulta y responde lo antes posible.
+                        </p>
+
+                    </td>
+                </tr>
+                <!-- Additional Info -->
+                <tr>
+                    <td style="background-color: #f8fafc; padding: 30px 40px; border-top: 1px solid #e2e8f0;">
+                        <p style="color: #4a5568; font-size: 14px; line-height: 1.5; margin: 0 0 15px;">
+                            Recuerda mantener la confidencialidad de la información del usuario y seguir nuestras <a href="https://asky.com/expert-guidelines" style="color: #3182ce; text-decoration: none; font-weight: 600;">pautas para expertos</a>.
+                        </p>
+                        <p style="color: #4a5568; font-size: 14px; line-height: 1.5; margin: 0;">
+                            ¿Necesitas ayuda? Contacta al <a href="https://asky-siho.onrender.com" style="color: #3182ce; text-decoration: none; font-weight: 600;">equipo de soporte para expertos</a>.
+                        </p>
+                    </td>
+                </tr>
+                <!-- Footer -->
+                <tr>
+                    <td style="background-color: #2d3748; color: #ffffff; font-size: 12px; line-height: 1.5; padding: 20px 40px; text-align: center;">
+                        <p style="margin: 0;">© 2025 ASKy. Todos los derechos reservados.</p>
+                    </td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+</table>
+</body>
+</html>

@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tienes una nueva respuesta en ASKy</title>
+</head>
+<body style="margin: 0; padding: 0; background-color: #f4f7f9; font-family: 'Be Vietnam Pro', Arial, sans-serif;">
+<table role="presentation" style="width: 100%; border-collapse: collapse;">
+    <tr>
+        <td align="center" style="padding: 40px 0;">
+            <table role="presentation" style="width: 600px; border-collapse: collapse; background-color: #ffffff; border-radius: 8px; overflow: hidden; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);">
+                <!-- Header -->
+                <tr>
+                    <td style="background-color: #00FFFF; padding: 30px 40px;">
+                        <img src="https://tu-dominio.com/path-to-asky-logo.png" alt="ASKy Logo" width="120" style="display: block;">
+                    </td>
+                </tr>
+                <!-- Content -->
+                <tr>
+                    <td style="padding: 40px;">
+                        <h1 style="color: #1a202c; font-family: 'Fira Mono', 'Courier New', monospace; font-size: 28px; font-weight: 700; line-height: 1.2; margin: 0 0 20px; text-align: left;">¡Nueva Respuesta Disponible!</h1>
+                        <p style="color: #4a5568; font-size: 16px; line-height: 1.5; margin: 0 0 20px;">
+                            Hola <span style="color: #2d3748; font-weight: 600;" th:text="${userName}">Usuario</span>,
+                        </p>
+                        <p style="color: #4a5568; font-size: 16px; line-height: 1.5; margin: 0 0 20px;">
+                            Un experto ha respondido tu consulta sobre:
+                        </p>
+                        <p style="background-color: #e6ffff; border-left: 4px solid #00FFFF; color: #2d3748; font-size: 18px; font-weight: 600; line-height: 1.5; margin: 0 0 20px; padding: 15px;" th:text="${consultationTopic}">
+                            Tema de la consulta
+                        </p>
+                        <table role="presentation" style="width: 100%; border-collapse: collapse;">
+                            <tr>
+                                <td align="center" style="padding-top: 20px;">
+                                    <a href="https://asky-siho.onrender.com" style="background-color: #00FFFF; border-radius: 4px; color: #000000; font-family: 'Fira Mono', 'Courier New', monospace; font-size: 16px; font-weight: 700; text-decoration: none; display: inline-block; padding: 14px 28px; transition: background-color 0.3s ease;">Ver Respuesta</a>
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+                <!-- Additional Info -->
+                <tr>
+                    <td style="background-color: #f8fafc; padding: 30px 40px; border-top: 1px solid #e2e8f0;">
+                        <p style="color: #4a5568; font-size: 14px; line-height: 1.5; margin: 0 0 15px;">
+                            ¿Tienes alguna pregunta? No dudes en <a href="https://asky-siho.onrender.com" style="color: #3182ce; text-decoration: none; font-weight: 600;">contactarnos</a>.
+                        </p>
+                        <p style="color: #4a5568; font-size: 14px; line-height: 1.5; margin: 0;">
+                            Gestiona tus <a href="https://asky-siho.onrender.com" style="color: #3182ce; text-decoration: none; font-weight: 600;">preferencias de notificación aquí</a>.
+                        </p>
+                    </td>
+                </tr>
+                <!-- Footer -->
+                <tr>
+                    <td style="background-color: #2d3748; color: #ffffff; font-size: 12px; line-height: 1.5; padding: 20px 40px; text-align: center;">
+                        <p style="margin: 0;">© 2025 ASKy. Todos los derechos reservados.</p>
+                    </td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+</table>
+</body>
+</html>
