@@ -78,27 +78,36 @@ public class RatingService {
 
     private void updateExpertRating(Expert expert) {
         List<Rating> ratings = IRatingRepository.findByExpert(expert);
-
-        // 🔹 Weighted Rating Calculation (Newer ratings weigh more)
-        double totalWeight = 0;
-        double weightedSum = 0;
         int totalRatings = ratings.size();
-        double decayFactor = 0.9; // 🔹 Newer ratings have 90% impact of the previous
 
-        for (int i = 0; i < totalRatings; i++) {
-            double weight = Math.pow(decayFactor, totalRatings - i - 1);
-            totalWeight += weight;
-            weightedSum += ratings.get(i).getRating() * weight;
+        if (totalRatings == 1 && expert.getAverageRating() == 0.0f) {
+            // Si es la primera calificación y el experto no tenía rating previo, asignarla directamente
+            expert.setAverageRating(ratings.get(0).getRating().floatValue());
+            expert.setTotalResponses(1);
+        } else if (totalRatings > 1) {
+            // Si ya tiene calificaciones, calcular el promedio ponderado
+            double weightedSum = 0;
+            double totalWeight = 0;
+            double decayFactor = 0.9; // Más recientes tienen mayor peso
+
+            for (int i = 0; i < totalRatings; i++) {
+                double weight = Math.pow(decayFactor, totalRatings - i - 1);
+                totalWeight += weight;
+                weightedSum += ratings.get(i).getRating() * weight;
+            }
+
+            float newAverageRating = totalWeight > 0 ? (float) (weightedSum / totalWeight) : 0.0f;
+            expert.setAverageRating(newAverageRating);
+            expert.setTotalResponses(totalRatings);
+        } else {
+            // Si no tiene calificaciones, dejar el rating en 0.0f
+            expert.setAverageRating(0.0f);
+            expert.setTotalResponses(0);
         }
 
-        float newAverageRating = totalRatings > 0 ? (float) (weightedSum / totalWeight) : 0;
-        expert.setAverageRating(newAverageRating);
-
-        // 🔹 Check if expert should be sanctioned
+        // 🔹 Aplicar sanción si tiene 2 o más calificaciones menores a 2 estrellas
         long lowRatingsCount = ratings.stream().filter(r -> r.getRating() < 2).count();
-        if (lowRatingsCount >= 2) {
-            expert.setSanctioned(true);
-        }
+        expert.setSanctioned(lowRatingsCount >= 2);
 
         IExpertRepository.save(expert);
     }
