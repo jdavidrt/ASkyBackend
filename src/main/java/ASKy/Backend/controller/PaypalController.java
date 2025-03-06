@@ -39,7 +39,7 @@ public class PaypalController {
         // ✅ Log para depuración (Verificar valores)
         log.info("Recarga procesada - UserID: {}, MoneyAmount: {}, AskoinAmount: {}, Method: {}",
                 userId, request.getMoneyAmount(), response.getAskoinAmount(), request.getMethod());
-        return ResponseEntity.ok(transactionService.processRecharge(request, userId));
+        return ResponseEntity.ok(response);
     }
 
     @PostMapping("/withdraw")
