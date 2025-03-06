@@ -10,7 +10,7 @@ public class RechargeAskoinRequest {
 
     @NotNull
     @Min(1)
-    private Integer amount;
+    private Float amount;
 
     @NotBlank
     private String method;

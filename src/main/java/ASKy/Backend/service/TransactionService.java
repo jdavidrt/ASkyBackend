@@ -20,14 +20,17 @@ public class TransactionService {
     private final IUserRepository userRepository;
     private  final EmailService emailService;
 
-    private static final float EXCHANGE_RATE = 1.0f; // 1 ASKoin = 1000 COP
-    private static final float PLATFORM_FEE = 0.10f; // 10% fee
+    private static final float EXCHANGE_RATE = 1000.0f; // 🔹 1 ASKoin = 1000 COP
+    private static final float PLATFORM_FEE = 0.10f; // 🔹 10% de comisión
 
     public TransactionResponse processRecharge(CreateTransactionRequest request, Integer userId) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new EntityNotFoundException("Usuario no encontrado"));
 
+        // 🔹 Calcular el monto neto después de la comisión del 10%
         float netAmount = request.getMoneyAmount() * (1 - PLATFORM_FEE);
+
+        // 🔹 Convertir a ASKoins (dividiendo por la tasa de cambio)
         float askoinAmount = netAmount / EXCHANGE_RATE;
 
         Transaction transaction = new Transaction();

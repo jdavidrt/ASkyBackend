@@ -35,6 +35,10 @@ public class PaypalController {
 
     @PostMapping("/recharge")
     public ResponseEntity<TransactionResponse> recharge(@RequestBody CreateTransactionRequest request, @RequestParam Integer userId) {
+        TransactionResponse response = transactionService.processRecharge(request, userId);
+        // ✅ Log para depuración (Verificar valores)
+        log.info("Recarga procesada - UserID: {}, MoneyAmount: {}, AskoinAmount: {}, Method: {}",
+                userId, request.getMoneyAmount(), response.getAskoinAmount(), request.getMethod());
         return ResponseEntity.ok(transactionService.processRecharge(request, userId));
     }
 
